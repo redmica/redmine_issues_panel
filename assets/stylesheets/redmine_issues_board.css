@@ -1,0 +1,81 @@
+table.issues-board {
+  border: 1px solid #e4e4e4;
+  width: 100%;
+  margin-bottom: 4px;
+  border-radius: 3px;
+  border-spacing: 0;
+  overflow: hidden;
+  table-layout: fixed;
+}
+
+table.issues-board th {
+  background-color:#EEEEEE;
+  padding: 4px;
+  white-space:nowrap;
+  font-weight:bold;
+}
+
+table.issues-board td {
+  vertical-align: top;
+  background-color: #fffffb;
+  border: 1px solid #e4e4e4;
+}
+
+.issue-card-receiver {
+  border:1px dashed #fff;
+  padding: 15px 0 0 0;
+}
+
+.dragging .issue-card-receiver {
+  border:1px dashed #777;
+  margin-bottom: 20px;
+}
+
+.issue-card {
+  border: 1px solid #ddd;
+  margin: 4px 8px 10px 8px;
+  color: #505050;
+  line-height: 1.5em;
+  border-radius: 3px;
+  background-color: #ffffdd;
+}
+
+.issue-card>.contextual {
+  opacity: 0.001;
+  transition: opacity 0.2s;
+}
+
+.issue-card:hover>.contextual {
+  opacity: 1;
+}
+
+.issue-card[class~=ui-sortable-helper] {
+  transform: rotate(10deg);
+}
+
+.issue-card .card-content {
+  padding: 8px;
+  text-align: left;
+  font-size: 0.9em;
+  display: block;
+}
+.issue-card .card-content a {
+  background-color: transparent;
+  border: none;
+}
+.issue-card .closed {
+  background-color: #dedede;
+  border: 1px solid;
+  border-color: #9fcf9f;
+}
+.card-content .caption {
+  float: left;
+  padding-right: 2px;
+}
+.card-content .header .badge {
+  float: right;
+}
+.card-content .footer a {
+  float: right;
+  padding-top: 4px;
+}

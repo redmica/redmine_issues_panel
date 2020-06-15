@@ -1,0 +1,10 @@
+# English strings go here for Rails i18n
+en:
+  label_issues_board_plural: "Issues Board"
+  notice_issues_board_truncated: "The IssuesBoard was truncated because it exceeds the maximum number of items that can be displayed (%{max})"
+  notice_not_authorized_to_change_this_issue: "You are not authorized to change this issue."
+  notice_failed_to_move_issue: "Failed to move issue."
+  activerecord:
+    errors:
+      messages:
+        can_t_be_changed: "cannot be changed."

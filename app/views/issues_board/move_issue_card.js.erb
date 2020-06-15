@@ -1,0 +1,14 @@
+<% if flash[:error].blank? %>
+  <% if @issue_card.closed? %>
+    $('#issue-<%= @issue_card.id %>').addClass('closed');
+    $('#issue-<%= @issue_card.id %>').find('a.issue').addClass('closed');
+  <% else %>
+    $('#issue-<%= @issue_card.id %>').removeClass('closed');
+    $('#issue-<%= @issue_card.id %>').find('a.issue').removeClass('closed');
+  <% end %>
+  $('.issue-card-receiver').sortable('destroy');
+  loadSortableBoard();
+<% else %>
+  alert('<%= raw(escape_javascript(flash[:error])) %>');
+  $('.issue-card-receiver').sortable('cancel');
+<% end %>

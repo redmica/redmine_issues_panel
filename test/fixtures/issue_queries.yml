@@ -1,0 +1,18 @@
+--- 
+queries_100:
+  id: 100
+  type: IssueQuery
+  project_id: 1
+  visibility: 2
+  name: Issues Board Query
+  filters: |
+    --- 
+    status_id:
+      :values:
+      - "1"
+      - "2"
+      - "5"
+      :operator: "="
+
+  user_id: 1
+  column_names:

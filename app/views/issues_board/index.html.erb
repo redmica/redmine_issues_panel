@@ -1,0 +1,73 @@
+<% @issues_board.view = self %>
+
+<%= stylesheet_link_tag "redmine_issues_board", plugin: "redmine_issues_board" %>
+
+<div class="contextual">
+  <% if User.current.allowed_to?(:add_issues, @project, :global => true) && (@project.nil? || Issue.allowed_target_trackers(@project).any?) %>
+    <%= link_to l(:label_issue_new), _new_project_issue_path(@project), :class => 'icon icon-add new-issue' %>
+  <% end %>
+</div>
+
+<h2><%= @query.new_record? ? l(:label_issues_board_plural) : @query.name %></h2>
+<% html_title(@query.new_record? ? l(:label_issues_board_plural) : @query.name) %>
+
+<%= form_tag(@project ? project_issues_board_path(@project) : issues_board_path, :method => :get, :id => 'query_form') do %>
+  <%= render :partial => 'issues_board/query_form' %>
+<% end %>
+
+<% if @query.valid? %>
+<% if @query.issue_count == 0 %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <% if @issues_board.truncated %>
+    <p class="warning"><%= l(:notice_issues_board_truncated, :max => @issues_board.issues_limit) %></p>
+  <% end %>
+  <%= form_tag({}, :data => {:cm_url => issues_context_menu_path}) do %>
+    <%= hidden_field_tag('back_url', url_for(:params => request.query_parameters), :id => nil) %>
+    <div class="autoscroll">
+      <%= @issues_board.render_issues_board %>
+    </div>
+  <% end %>
+<% end %>
+<% end %>
+
+<% content_for :sidebar do %>
+  <%= render :partial => 'issues/sidebar' %>
+<% end %>
+
+<%= context_menu %>
+
+<%= javascript_tag do %>
+function initIssuesCardSort(id) {
+  var movable_area = $(id).attr('data-movable-area');
+  $(id).sortable({
+    connectWith: movable_area,
+    tolerance: 'pointer',
+    handle: '.card-content',
+    start: function(event, ui){$(movable_area).parent().addClass('dragging');},
+    stop: function(event, ui){$(movable_area).parent().removeClass('dragging');},
+    update: function(event, ui){
+      if ($(this).find(ui.item).length > 0) {
+        $.ajax({
+          url: '<%= move_issue_card_path(:format => 'js') %>',
+          type: 'put',
+          data: {
+            'id': ui.item.attr('data-issue-id'),
+            'status_id': $(this).attr('data-status-id'),
+            'group_key': $(this).attr('data-group-key'),
+            'group_value': $(this).attr('data-group-value')
+          }
+        });
+      }
+    }
+  });
+}
+function loadSortableBoard() {
+  $(".issue-card-receiver").each(function() {
+    initIssuesCardSort('#' + $(this).attr('id'));
+  });
+}
+$(document).ready(function(){
+  loadSortableBoard();
+});
+<% end %>
