@@ -69,5 +69,9 @@ function loadSortableBoard() {
 }
 $(document).ready(function(){
   loadSortableBoard();
+  $('.issue-card').dblclick(function() {
+    var issue_id = $(this).attr('data-issue-id');
+    window.location.href='<%= issues_path %>/' + issue_id;
+  });
 });
 <% end %>
