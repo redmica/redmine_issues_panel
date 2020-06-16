@@ -72,8 +72,8 @@ table.issues-board td {
   float: left;
   padding-right: 2px;
 }
-.card-content .header .badge {
-  margin-left: 8px;
+.card-content .header a.issue {
+  float: left;
 }
 .card-content .header .js-contextmenu {
   float: right;

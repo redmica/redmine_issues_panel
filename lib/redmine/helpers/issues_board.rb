@@ -21,6 +21,7 @@ module Redmine
 
       def query=(query)
         @query = query
+        query.available_columns.delete_if { |c| c.name == :tracker }
         @truncated = @query.issue_count.to_i > @issues_limit.to_i
       end
 
@@ -83,9 +84,8 @@ module Redmine
           view.content_tag('div',
             view.content_tag('input', nil, :type => 'checkbox', :name => 'ids[]', :value => issue.id, :style => 'display:none;', :class => 'toggle-selection').html_safe +
             view.content_tag('div',
-              view.link_to_issue(issue, :tracker => false, :subject => false).html_safe +
-              (issue.is_private? ? view.content_tag('span', l(:field_is_private), :class => 'badge badge-private private') : '').html_safe +
-              view.link_to_context_menu.html_safe,
+              view.link_to_context_menu.html_safe +
+              view.link_to_issue(issue, :tracker => true, :subject => false).html_safe,
               :class => 'header clear'
             ).html_safe +
             @query.inline_columns.collect do |column|
