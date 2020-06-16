@@ -4,6 +4,9 @@ ja:
   notice_issues_board_truncated: "かんばんは、最大表示件数(%{max})を超えたため切り捨てられました。"
   notice_not_authorized_to_change_this_issue: "このチケットの変更は許可されていません。"
   notice_failed_to_move_issue: "チケットの移動に失敗しました。"
+
+  project_module_issues_board: "かんばん"
+
   activerecord:
     errors:
       messages:
