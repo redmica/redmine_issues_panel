@@ -16,9 +16,6 @@
 <% end %>
 
 <% if @query.valid? %>
-<% if @query.issue_count == 0 %>
-  <p class="nodata"><%= l(:label_no_data) %></p>
-<% end %>
   <% if @issues_board.truncated %>
     <p class="warning"><%= l(:notice_issues_board_truncated, :max => @issues_board.issues_limit) %></p>
   <% end %>
