@@ -18,7 +18,7 @@
 <% if @query.valid? %>
 <% if @query.issue_count == 0 %>
   <p class="nodata"><%= l(:label_no_data) %></p>
-<% else %>
+<% end %>
   <% if @issues_board.truncated %>
     <p class="warning"><%= l(:notice_issues_board_truncated, :max => @issues_board.issues_limit) %></p>
   <% end %>
@@ -28,7 +28,6 @@
       <%= @issues_board.render_issues_board %>
     </div>
   <% end %>
-<% end %>
 <% end %>
 
 <% content_for :sidebar do %>
