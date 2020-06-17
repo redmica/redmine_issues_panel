@@ -54,24 +54,28 @@ class IssuesBoardControllerTest < ActionController::TestCase
     # query form
     assert_query_form
 
+    issue_ids_on_status_1 = [1, 3, 5, 6, 7, 9, 10, 13, 14]
+    issue_ids_on_status_2 = [2]
+    issue_ids_on_status_5 = [8, 11, 12]
+
     # issues board
     assert_select 'table#issues_board.issues-board' do
       assert_select 'thead' do
         assert_select 'tr' do
-          assert_select 'th', 'New'
-          assert_select 'th', 'Assigned'
-          assert_select 'th', 'Closed'
+          assert_select 'th', "New#{issue_ids_on_status_1.count}"
+          assert_select 'th', "Assigned#{issue_ids_on_status_2.count}"
+          assert_select 'th', "Closed#{issue_ids_on_status_5.count}"
         end
       end
       assert_select 'tr' do
         assert_select 'td.issue-card-receiver[data-status-id=1]' do
-          assert_issue_cards([1, 3, 5, 6, 7, 9, 10, 13, 14])
+          assert_issue_cards(issue_ids_on_status_1)
         end
         assert_select 'td.issue-card-receiver[data-status-id=2]' do
-          assert_issue_cards([2])
+          assert_issue_cards(issue_ids_on_status_2)
         end
         assert_select 'td.issue-card-receiver[data-status-id=5]' do
-          assert_issue_cards([8, 11, 12])
+          assert_issue_cards(issue_ids_on_status_5)
         end
       end
     end
