@@ -23,7 +23,9 @@ class IssueCard < Issue
         end
       end
     end
-    self.safe_attributes = @move_attributes.merge(@custom_field_attributes)
-    self.save!
+    if @move_attributes.any? || @custom_field_attributes.any?
+      self.safe_attributes = @move_attributes.merge(@custom_field_attributes)
+      self.save!
+    end
   end
 end

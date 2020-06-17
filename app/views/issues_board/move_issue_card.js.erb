@@ -1,4 +1,4 @@
-<% if flash[:error].blank? %>
+<% if @issue_card.saved_changes? %>
   <% if @issue_card.closed? %>
     $('#issue-<%= @issue_card.id %>').addClass('closed');
     $('#issue-<%= @issue_card.id %>').find('a.issue').addClass('closed');
@@ -8,9 +8,12 @@
   <% end %>
   $('#issues-count-on-status-<%= @issue_card.status_id_before_last_save %>').html('<%= @issues_board.issues.select { |i| i.status_id == @issue_card.status_id_before_last_save }.count %>');
   $('#issues-count-on-status-<%= @issue_card.status_id %>').html('<%= @issues_board.issues.select { |i| i.status_id == @issue_card.status_id }.count %>');
+  // refresh issues board
   $('.issue-card-receiver').sortable('destroy');
   loadSortableBoard();
 <% else %>
+  <% if flash[:error].present? %>
   alert('<%= raw(escape_javascript(flash[:error])) %>');
+  <% end %>
   $('.issue-card-receiver').sortable('cancel');
 <% end %>
