@@ -12,7 +12,7 @@ Redmine::Plugin.register :redmine_issues_board do
 
   # permission setting
   project_module :issues_board do
-    permission :use_issues_board, { :issues_board => [:index, :change_issue_status] }, :public => true, :require => :member
+    permission :use_issues_board, { :issues_board => [:index, :move_issue_card] }, :public => true, :require => :member
   end
 
   # menu setting

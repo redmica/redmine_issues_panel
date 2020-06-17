@@ -49,6 +49,7 @@ function initIssuesCardSort(id) {
           type: 'put',
           data: {
             'id': ui.item.attr('data-issue-id'),
+            <%= @project ? ("'project_id': #{@project.id},").html_safe : '' %>
             'status_id': $(this).attr('data-status-id'),
             'group_key': $(this).attr('data-group-key'),
             'group_value': $(this).attr('data-group-value')

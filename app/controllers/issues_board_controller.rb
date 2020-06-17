@@ -1,5 +1,5 @@
 class IssuesBoardController < ApplicationController
-  before_action :find_optional_project, :only => :index
+  before_action :find_optional_project
 
   # MEMO: authorizeフィルターを入れると、サブプロジェクトでstatus_boardモジュールが有効でない場合にサブプロジェクトのチケットが移動できないため外している=>問題ないか検討する
   #before_action :find_issue, :authorize, :only => :change_issue_status
@@ -14,9 +14,7 @@ class IssuesBoardController < ApplicationController
   include QueriesHelper
 
   def index
-    @issues_board = Redmine::Helpers::IssuesBoard.new(params)
-    retrieve_query
-    @issues_board.query = @query
+    retrieve_issue_board(params)
   end
 
   def move_issue_card
@@ -24,6 +22,8 @@ class IssuesBoardController < ApplicationController
     raise Unauthorized unless @issue_card.visible?
     @issue_card.init_journal(User.current)
     @issue_card.move!(params)
+
+    retrieve_issue_board
   rescue ActiveRecord::RecordNotFound
     @issue_card = IssueCard.new
     flash.now[:error] = l(:error_issue_not_found_in_project)
@@ -33,5 +33,13 @@ class IssuesBoardController < ApplicationController
     flash.now[:error] = e.message
   ensure
     render :layout => false
+  end
+
+  private
+
+  def retrieve_issue_board(params={})
+    @issues_board = Redmine::Helpers::IssuesBoard.new(params)
+    retrieve_query
+    @issues_board.query = @query
   end
 end

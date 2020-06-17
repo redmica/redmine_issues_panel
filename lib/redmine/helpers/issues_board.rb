@@ -106,7 +106,15 @@ module Redmine
         thead = +''
         thead << view.content_tag('thead',
                    view.content_tag('tr',
-                     statuses.collect {|s| view.content_tag('th', s)}.join.html_safe
+                     statuses.collect {|s|
+                       view.content_tag('th',
+                         s.to_s.html_safe +
+                         view.content_tag('span',
+                                          issues_count = self.issues.select { |issue| issue.status_id == s.id }.count,
+                           :id => "issues-count-on-status-#{s.id}",
+                           :class => 'badge badge-count count',
+                           :data => { 'issues-count' => issues_count}).html_safe,
+                       )}.join.html_safe
                    )
                  )
 
@@ -168,8 +176,8 @@ module Redmine
                   move_params.merge!({ :group_key => @query.group_by, :group_value => group_id })
                 end
               elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
-                group_id = group.to_s
-                move_params.merge!({ :group_key => :custom_field_values, :group_value => "#{@query.group_by_column.custom_field.id},#{group_id}" })
+                group_id = group.to_s.gsub(' ', '-')
+                move_params.merge!({ :group_key => :custom_field_values, :group_value => "#{@query.group_by_column.custom_field.id},#{group.to_s}" })
               else # eg: TimestampQueryColumn
                 group_id = group.to_s
                 # can't move between groups (because created_at, updated_on and closed_on can't change).
