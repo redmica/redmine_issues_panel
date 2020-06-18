@@ -59,6 +59,65 @@ module Redmine
         @query && @query.grouped? && @query.group_by_column.name != :status
       end
 
+      def grouped_issues
+        if self.grouped?
+          self.issues.group_by { |issue| query.group_by_column.group_value(issue) }
+        else
+          {nil => self.issues}
+        end.each do |group, issues_in_group|
+          if group.nil?
+            group_value = ''
+            group_label = "(#{l(:label_blank_value)})"
+          else
+            if @query.group_by_column.instance_of?(QueryColumn) &&
+               [:project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version, :author].include?(@query.group_by_column.name)
+              group_value = group.try(:id).to_s
+            elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn) &&
+               [:user, :version, :enumeration].include?(@query.group_by_column.custom_field.field_format.to_sym)
+              group_value = group.try(:id).to_s
+            else
+              group_value = group.to_s
+            end
+            group_label = view.format_object(group)
+          end
+          group_css = group_value.gsub(' ', '-')
+          yield group_value, group_label, group_css, issues_in_group
+        end
+      end
+
+      def move_params(group_value, status)
+        params = { :status_id => status.id }
+        if self.grouped?
+          if @query.group_by_column.instance_of?(QueryColumn)
+            case @query.group_by_column.name
+            when :project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version
+              params.merge!({ :group_key => "#{@query.group_by}_id", :group_value => group_value })
+            when :author
+              # can't move between groups (because author can't change).
+            else
+              params.merge!({ :group_key => @query.group_by, :group_value => group_value })
+            end
+          elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
+            params.merge!({ :group_key => :custom_field_values, :group_value => "#{@query.group_by_column.custom_field.id},#{group_value}" })
+          else # eg: TimestampQueryColumn
+            # can't move between groups (because created_at, updated_on and closed_on can't change).
+          end
+
+          if @query.group_by_column.instance_of?(TimestampQueryColumn) || @query.group_by_column.name == :author
+            # can't move to other groups
+            params.merge!({ :movable_area => ".issue-card-receiver-#{group_value}" })
+          else
+            # enable to move other groups
+            params.merge!({ :movable_area => ".issue-card-receiver" })
+          end
+        else
+          # enable to move other groups
+          params.merge!({ :movable_area => ".issue-card-receiver" })
+        end
+        params
+      end
+
+
       def render_column_content(column, issue)
         return '' if column.name == :id || column.name == :status || column == @query.group_by_column
         caption = "<strong>#{column.caption}: </strong>"
@@ -103,6 +162,7 @@ module Redmine
       def render_issues_board
         statuses = self.board_statuses
 
+        # board header
         thead = +''
         thead << view.content_tag('thead',
                    view.content_tag('tr',
@@ -110,40 +170,31 @@ module Redmine
                        view.content_tag('th',
                          s.to_s.html_safe +
                          view.content_tag('span',
-                                          issues_count = self.issues.select { |issue| issue.status_id == s.id }.count,
+                           issues_count = self.issues.select { |issue| issue.status_id == s.id }.count,
                            :id => "issues-count-on-status-#{s.id}",
-                           :class => 'badge badge-count count',
-                           :data => { 'issues-count' => issues_count}).html_safe,
+                           :class => 'badge badge-count count').html_safe,
                        )}.join.html_safe
                    )
                  )
 
-        if self.grouped?
-          grouped_issues = self.issues.group_by { |issue| query.group_by_column.group_value(issue) }
-        end
-        grouped_issues ||= {nil => self.issues}
-
         tbody = +''
-        grouped_issues.each do |group, issues_in_group|
+        self.grouped_issues do |group_value, group_label, group_css, issues_in_group|
           next if issues_in_group.nil?
 
+          # group label
           if self.grouped?
-            if group.nil?
-              group_name = "(#{l(:label_blank_value)})"
-            else
-              group_name = view.format_object(group)
-            end
             tbody << view.content_tag('tr',
                        view.content_tag('td',
                          view.content_tag('span', '&nbsp;'.html_safe, :class => 'expander icon icon-expended', :onclick => 'toggleRowGroup(this);').html_safe +
-                         view.content_tag('span', group_name, :class => 'name').html_safe +
-                         view.content_tag('span', issues_in_group.count, :class => 'badge badge-count count').html_safe,
+                         view.content_tag('span', group_label, :class => 'name').html_safe +
+                         view.content_tag('span', issues_in_group.count, :class => 'badge badge-count count', :id => "issues-count-on-group-#{group_css}").html_safe,
                          :colspan => statuses.count
                        ),
                        :class => 'group open'
                      ).html_safe
           end
 
+          # status lanes (in group)
           td_tags = +''
           issues_group_by_status = issues_in_group.group_by { |issue| issue.status }
           column_names = @query.inline_columns.collect{ |c| c.name }
@@ -159,44 +210,11 @@ module Redmine
                                )
               end
             end
-
-            group_id = ''
-            move_params = { :status_id => status.id }
-            if self.grouped?
-              if @query.group_by_column.instance_of?(QueryColumn)
-                case @query.group_by_column.name
-                when :project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version
-                  group_id = group.try(:id).to_s
-                  move_params.merge!({ :group_key => "#{@query.group_by}_id", :group_value => group_id })
-                when :author
-                  group_id = group.try(:id).to_s
-                  # can't move between groups (because author can't change).
-                else
-                  group_id = group.to_s
-                  move_params.merge!({ :group_key => @query.group_by, :group_value => group_id })
-                end
-              elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
-                group_id = group.to_s.gsub(' ', '-')
-                move_params.merge!({ :group_key => :custom_field_values, :group_value => "#{@query.group_by_column.custom_field.id},#{group.to_s}" })
-              else # eg: TimestampQueryColumn
-                group_id = group.to_s
-                # can't move between groups (because created_at, updated_on and closed_on can't change).
-              end
-
-              if @query.group_by_column.instance_of?(TimestampQueryColumn) || @query.group_by_column.name == :author
-                move_params.merge!({ :movable_area => ".issue-card-receiver-#{group_id}" })
-              else
-                move_params.merge!({ :movable_area => ".issue-card-receiver" })
-              end
-            else
-              move_params.merge!({ :movable_area => ".issue-card-receiver" })
-            end
-
             td_tags << view.content_tag('td',
                          issue_cards.html_safe,
-                         :class => "issue-card-receiver issue-card-receiver-#{group_id}",
-                         :id => "issue-card-receiver-#{group_id}-#{status.id}",
-                         :data => move_params
+                         :class => "issue-card-receiver issue-card-receiver-#{group_css}",
+                         :id => "issue-card-receiver-#{group_css}-#{status.id}",
+                         :data => move_params(group_value, status)
                        ).html_safe
           end
 

@@ -23,7 +23,6 @@ class IssuesBoardController < ApplicationController
     @issue_card.init_journal(User.current)
     @issue_card.move!(params)
 
-    retrieve_issue_board
   rescue ActiveRecord::RecordNotFound
     @issue_card = IssueCard.new
     flash.now[:error] = l(:error_issue_not_found_in_project)
@@ -32,6 +31,7 @@ class IssuesBoardController < ApplicationController
   rescue Exception => e
     flash.now[:error] = e.message
   ensure
+    retrieve_issue_board
     render :layout => false
   end
 
