@@ -64,8 +64,6 @@ table.issues-board td {
   border: none;
 }
 .issue-card .closed {
-  border: 2px solid;
-  border-color: #BAE0BA;
   background-color: #fffff0;
 }
 .card-content .caption {
