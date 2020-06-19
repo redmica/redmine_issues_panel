@@ -187,7 +187,7 @@ module Redmine
                        view.content_tag('td',
                          view.content_tag('span', '&nbsp;'.html_safe, :class => 'expander icon icon-expended', :onclick => 'toggleRowGroup(this);').html_safe +
                          view.content_tag('span', group_label, :class => 'name').html_safe +
-                         view.content_tag('span', issues_in_group.count, :class => 'badge badge-count count', :id => "issues-count-on-group-#{group_css}").html_safe,
+                         view.content_tag('span', issues_in_group.count, :class => 'badge badge-count count issues-count-on-group', :id => "issues-count-on-group-#{group_css}").html_safe,
                          :colspan => statuses.count
                        ),
                        :class => 'group open'
