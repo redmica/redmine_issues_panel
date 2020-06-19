@@ -64,21 +64,25 @@ table.issues-board td {
   border: none;
 }
 .issue-card .closed {
-  background-color: #dedede;
-  border: 1px solid;
-  border-color: #9fcf9f;
+  border: 2px solid;
+  border-color: #BAE0BA;
+  background-color: #fffff0;
 }
 .card-content .caption {
   float: left;
   padding-right: 2px;
 }
-.card-content .header a.issue {
-  float: left;
+.card-content .header a.closed {
+  background-image: url(../../../images/true.png);
+  background-repeat: no-repeat;
+  padding-left: 18px;
 }
 .card-content .header .js-contextmenu {
   float: right;
 }
+.card-content .footer {
+  padding-top: 4px;
+}
 .card-content .footer a {
   float: right;
-  padding-top: 4px;
 }
