@@ -38,6 +38,7 @@ table.issues-board td {
   line-height: 1.5em;
   border-radius: 3px;
   background-color: #ffffdd;
+  word-break: break-all;
 }
 
 .issue-card>.contextual {
