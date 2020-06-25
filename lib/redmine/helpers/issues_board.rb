@@ -155,7 +155,7 @@ module Redmine
               :class => 'footer clear').html_safe, 
             :class => "card-content"),
           :id => "issue-#{issue.id}",
-          :class => "hascontextmenu #{issue.closed? ? 'closed' : ''}"
+          :class => "hascontextmenu #{issue.priority.try(:css_classes)} #{issue.closed? ? 'closed' : ''}"
         ).html_safe
       end
 

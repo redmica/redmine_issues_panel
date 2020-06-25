@@ -53,6 +53,19 @@ table.issues-board td {
   transform: rotate(10deg);
 }
 
+.issue-card div.priority-lowest {
+  box-shadow: 4px 0px 0px 0px #81D4FA inset;
+}
+.issue-card div.priority-high3 {
+  box-shadow: 4px 0px 0px 0px #EF9A9A inset;
+}
+.issue-card div.priority-high2 {
+  box-shadow: 4px 0px 0px 0px #E53935 inset;
+}
+.issue-card div.priority-highest {
+  box-shadow: 4px 0px 0px 0px #E53935 inset;
+}
+
 .issue-card .card-content {
   padding: 8px;
   text-align: left;
