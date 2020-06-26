@@ -100,22 +100,18 @@ class IssuesBoardControllerTest < ActionController::TestCase
     end
   end
 
-  def test_move_issue_card_and_close
+  def test_move_issue_card
     put :move_issue_card, :xhr => true, :params => {
       :id => 1, :status_id => 5
     }
     assert_response :success
-    assert_match "$('#issue-1').addClass('closed');", response.body
-    assert_match "$('#issue-1').find('a.issue').addClass('closed');", response.body
-  end
-
-  def test_move_issue_card_and_open
-    put :move_issue_card, :xhr => true, :params => {
-      :id => 1, :status_id => 3 
-    }
-    assert_response :success
-    assert_match "$('#issue-1').removeClass('closed');", response.body
-    assert_match "$('#issue-1').find('a.issue').removeClass('closed');", response.body
+    assert_match "$('#issue-card-1').html", response.body
+    assert_match "$('#issues-count-on-status-1').html('0')", response.body
+    assert_match "$('#issues-count-on-status-5').html('4')", response.body
+    assert_match "$('.issues-count-on-group').html('0');", response.body
+    assert_match "$('#issues-count-on-group-').html('4');", response.body
+    assert_match "$('.issue-card-receiver').sortable('destroy');", response.body
+    assert_match "loadSortableBoard();", response.body
   end
 
   def test_move_issue_card_but_record_not_found
