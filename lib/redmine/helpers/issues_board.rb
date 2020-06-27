@@ -81,7 +81,7 @@ module Redmine
             group_label = view.format_object(group)
           end
           group_css = group_value.gsub(' ', '-')
-          yield group_value, group_label, group_css, issues_in_group
+          yield group_value, group_label, group_css, issues_in_group.count, issues_in_group.group_by { |issue| issue.status }
         end
       end
 
@@ -159,6 +159,19 @@ module Redmine
         ).html_safe
       end
 
+      def render_issue_cards(issues_in_status)
+        issue_cards = +''
+        (issues_in_status || []).each do |issue|
+          issue_cards << view.content_tag('div',
+                           render_card_content(issue),
+                           :class => "issue-card",
+                           :id => "issue-card-#{issue.id}",
+                           :data => { :issue_id => issue.id }
+                         )
+        end
+        issue_cards.html_safe
+      end
+
       def render_issues_board
         statuses = self.board_statuses
 
@@ -178,8 +191,8 @@ module Redmine
                  )
 
         tbody = +''
-        self.grouped_issues do |group_value, group_label, group_css, issues_in_group|
-          next if issues_in_group.nil?
+        self.grouped_issues do |group_value, group_label, group_css, group_count, issues_in_group_by_status|
+          next if issues_in_group_by_status.nil?
 
           # group label
           if self.grouped?
@@ -187,7 +200,7 @@ module Redmine
                        view.content_tag('td',
                          view.content_tag('span', '&nbsp;'.html_safe, :class => 'expander icon icon-expended', :onclick => 'toggleRowGroup(this);').html_safe +
                          view.content_tag('span', group_label, :class => 'name').html_safe +
-                         view.content_tag('span', issues_in_group.count, :class => 'badge badge-count count issues-count-on-group', :id => "issues-count-on-group-#{group_css}").html_safe,
+                         view.content_tag('span', group_count, :class => 'badge badge-count count issues-count-on-group', :id => "issues-count-on-group-#{group_css}").html_safe,
                          :colspan => statuses.count
                        ),
                        :class => 'group open'
@@ -196,22 +209,10 @@ module Redmine
 
           # status lanes (in group)
           td_tags = +''
-          issues_group_by_status = issues_in_group.group_by { |issue| issue.status }
           column_names = @query.inline_columns.collect{ |c| c.name }
           statuses.each do |status|
-            issue_cards = +''
-            if issues_in_status = issues_group_by_status[status]
-              issues_in_status.each do |issue|
-                issue_cards << view.content_tag('div',
-                                 render_card_content(issue),
-                                 :class => "issue-card",
-                                 :id => "issue-card-#{issue.id}",
-                                 :data => { :issue_id => issue.id }
-                               )
-              end
-            end
             td_tags << view.content_tag('td',
-                         issue_cards.html_safe,
+                         render_issue_cards(issues_in_group_by_status[status]),
                          :class => "issue-card-receiver issue-card-receiver-#{group_css}",
                          :id => "issue-card-receiver-#{group_css}-#{status.id}",
                          :data => move_params(group_value, status)

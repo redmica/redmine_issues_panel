@@ -5,10 +5,13 @@
   // refresh status total
   $('#issues-count-on-status-<%= @issue_card.status_id_before_last_save %>').html('<%= @issues_board.issues.select { |i| i.status_id == @issue_card.status_id_before_last_save }.count %>');
   $('#issues-count-on-status-<%= @issue_card.status_id %>').html('<%= @issues_board.issues.select { |i| i.status_id == @issue_card.status_id }.count %>');
-  // refresh group total
+  // clear group total
   $('.issues-count-on-group').html('0');
-  <% @issues_board.grouped_issues do |_, _, group_css, issues_in_group| %>
-    $('#issues-count-on-group-<%= group_css %>').html('<%= issues_in_group.count %>');
+  <% @issues_board.grouped_issues do |_, _, group_css, group_count, issues_in_group_by_status| %>
+    // refresh group total
+    $('#issues-count-on-group-<%= group_css %>').html('<%= group_count %>');
+    // refresh issue cards in status
+    $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_board.render_issue_cards(issues_in_group_by_status[@issue_card.status]) %>');
   <% end %>
   // refresh issues board
   $('.issue-card-receiver').sortable('destroy');
