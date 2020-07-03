@@ -34,41 +34,66 @@
 <%= context_menu %>
 
 <%= javascript_tag do %>
-function initIssuesCardSort(id) {
-  var movable_area = $(id).attr('data-movable-area');
-  $(id).sortable({
-    connectWith: movable_area,
-    tolerance: 'pointer',
-    handle: '.card-content',
-    start: function(event, ui){$(movable_area).parent().addClass('dragging');},
-    stop: function(event, ui){$(movable_area).parent().removeClass('dragging');},
-    update: function(event, ui){
-      if ($(this).find(ui.item).length > 0) {
-        $.ajax({
-          url: '<%= move_issue_card_path(:format => 'js') %>',
-          type: 'put',
-          data: {
-            'id': ui.item.attr('data-issue-id'),
-            <%= @project ? ("'project_id': #{@project.id},").html_safe : '' %>
-            'status_id': $(this).attr('data-status-id'),
-            'group_key': $(this).attr('data-group-key'),
-            'group_value': $(this).attr('data-group-value')
-          }
-        });
+function loadDraggableSettings() {
+  $(".issue-card").each(function() {
+    var id = '#' + $(this).attr('id');
+    var movable_area = $(id).parent('td').attr('data-movable-area');
+    $(id).draggable({
+      containment: movable_area,
+      snap: ".issue-card-receiver",
+      snapMode: "inner",
+      revert: function(ui) {
+        if (ui==false) { return true };
+        // revert if card does not drop int the droppable area.
+        if (ui.hasClass('issue-card-receiver')==false) { return true };
+        if ($(this).hasClass('drag-revert')) {
+          $(this).removeClass('drag-revert');
+          return true;
+        }
+      },
+      opacity: 0.9,
+      zIndex: 100,
+      start: function() { $(this).css({ transform: 'rotate(10deg)' }); },
+      stop: function() { $(this).css({ transform: 'rotate(0deg)' }); }
+    });
+  });
+}
+function loadDroppableSetting() {
+  $(".issue-card-receiver").droppable({
+    accept: ".issue-card",
+    drop: function(event, ui) {
+      if (ui.draggable.length > 0) {
+        var org_status_id = ui.draggable.attr('data-status-id');
+        var org_group_value = ui.draggable.attr('data-group-value');
+        var new_status_id = $(this).attr('data-status-id');
+        var new_group_value = $(this).attr('data-group-value');
+        // revert if there is no change in status or group
+        if (org_status_id==new_status_id &&
+            (typeof(new_group_value) === "undefiend" || org_group_value==new_group_value)) {
+          return $(ui.draggable).addClass('drag-revert');
+        } else {
+          $.ajax({
+            url: '<%= move_issue_card_path(:format => 'js') %>',
+            type: 'put',
+            data: {
+              'id': ui.draggable.attr('data-issue-id'),
+              <%= @project ? ("'project_id': #{@project.id},").html_safe : '' %>
+              'status_id': $(this).attr('data-status-id'),
+              'group_key': $(this).attr('data-group-key'),
+              'group_value': $(this).attr('data-group-value')
+            }
+          });
+        }
       }
     }
   });
 }
-function loadSortableBoard() {
-  $(".issue-card-receiver").each(function() {
-    initIssuesCardSort('#' + $(this).attr('id'));
-  });
-}
 $(document).ready(function(){
-  loadSortableBoard();
   $('.issue-card').dblclick(function() {
     var issue_id = $(this).attr('data-issue-id');
     window.location.href='<%= issues_path %>/' + issue_id;
   });
+  loadDraggableSettings();
+  loadDroppableSetting();
 });
 <% end %>

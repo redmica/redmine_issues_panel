@@ -105,14 +105,14 @@ module Redmine
 
           if @query.group_by_column.instance_of?(TimestampQueryColumn) || @query.group_by_column.name == :author
             # can't move to other groups
-            params.merge!({ :movable_area => ".issue-card-receiver-#{group_value}" })
+            params.merge!({ :movable_area => ".issue-card-receivers-#{group_value}" })
           else
             # enable to move other groups
-            params.merge!({ :movable_area => ".issue-card-receiver" })
+            params.merge!({ :movable_area => ".issue-board" })
           end
         else
           # enable to move other groups
-          params.merge!({ :movable_area => ".issue-card-receiver" })
+          params.merge!({ :movable_area => ".issue-board" })
         end
         params
       end
@@ -159,14 +159,14 @@ module Redmine
         ).html_safe
       end
 
-      def render_issue_cards(issues_in_status)
+      def render_issue_cards(issues_in_status, group_value)
         issue_cards = +''
         (issues_in_status || []).each do |issue|
           issue_cards << view.content_tag('div',
                            render_card_content(issue),
                            :class => "issue-card",
                            :id => "issue-card-#{issue.id}",
-                           :data => { :issue_id => issue.id }
+                           :data => { :issue_id => issue.id, :status_id => issue.status_id, :group_value => group_value }
                          )
         end
         issue_cards.html_safe
@@ -212,14 +212,14 @@ module Redmine
           column_names = @query.inline_columns.collect{ |c| c.name }
           statuses.each do |status|
             td_tags << view.content_tag('td',
-                         render_issue_cards(issues_in_group_by_status[status]),
-                         :class => "issue-card-receiver issue-card-receiver-#{group_css}",
+                         render_issue_cards(issues_in_group_by_status[status], group_value),
+                         :class => "issue-card-receiver",
                          :id => "issue-card-receiver-#{group_css}-#{status.id}",
                          :data => move_params(group_value, status)
                        ).html_safe
           end
 
-          tbody << view.content_tag('tr', td_tags.html_safe)
+          tbody << view.content_tag('tr', td_tags.html_safe, :class => "issue-card-receivers-#{group_css}")
         end
 
         view.content_tag('table', thead.html_safe + tbody.html_safe, :id => 'issues_board', :class => 'issues-board list issues').html_safe

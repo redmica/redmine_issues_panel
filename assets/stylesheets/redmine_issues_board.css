@@ -26,9 +26,8 @@ table.issues-board td {
   padding: 15px 0 0 0;
 }
 
-.dragging .issue-card-receiver {
-  border:1px dashed #777;
-  margin-bottom: 20px;
+.ui-droppable-hover {
+  border:1px dashed #777!important;
 }
 
 .issue-card {
