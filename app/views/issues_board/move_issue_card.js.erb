@@ -13,6 +13,7 @@
     // refresh issue cards in status
     $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_board.render_issue_cards(issues_in_group_by_status[@issue_card.status], group_value) %>');
   <% end %>
+  loadDraggableSettings();
 <% else %>
   <% if flash[:error].present? %>
   alert('<%= raw(escape_javascript(flash[:error])) %>');
@@ -20,4 +21,3 @@
   // revart issue card
   $('#issue-card-<%= @issue_card.id %>').animate( {left: 0, top: 0}, 500 );
 <% end %>
-loadDraggableSettings();
