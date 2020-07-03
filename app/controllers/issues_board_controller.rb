@@ -1,11 +1,6 @@
 class IssuesBoardController < ApplicationController
   before_action :find_optional_project
 
-  # MEMO: authorizeフィルターを入れると、サブプロジェクトでstatus_boardモジュールが有効でない場合にサブプロジェクトのチケットが移動できないため外している=>問題ないか検討する
-  #before_action :find_issue, :authorize, :only => :change_issue_status
-  #before_action :find_issue, :only => :change_issue_status
-  #before_action :authorize, :only => :change_issue_status
-
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
 
   helper :issues
