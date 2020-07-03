@@ -1,11 +1,11 @@
 # Japanese strings go here for Rails i18n
 ja:
-  label_issues_board_plural: "チケットボード"
-  notice_issues_board_truncated: "チケットボードは、最大表示件数(%{max})を超えたため切り捨てられました。"
+  label_issues_panel_plural: "チケットパネル"
+  notice_issues_panel_truncated: "チケットパネルは、最大表示件数(%{max})を超えたため切り捨てられました。"
   notice_not_authorized_to_change_this_issue: "このチケットの変更は許可されていません。"
   notice_failed_to_move_issue: "チケットの移動に失敗しました。"
 
-  project_module_issues_board: "チケットボード"
+  project_module_issues_panel: "チケットパネル"
 
   activerecord:
     errors:

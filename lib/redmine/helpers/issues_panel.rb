@@ -1,7 +1,7 @@
 module Redmine
   module Helpers
-    # Simple class to handle isses board data
-    class IssuesBoard
+    # Simple class to handle isses panel data
+    class IssuesPanel
       include ERB::Util
       include Rails.application.routes.url_helpers
       include Redmine::I18n
@@ -25,7 +25,7 @@ module Redmine
         @truncated = @query.issue_count.to_i > @issues_limit.to_i
       end
 
-      def board_statuses
+      def panel_statuses
         # IssueStatus.where(:id => @query.issues.pluck(:status_id).uniq)
         if @query.project
           statuses = @query.project.rolled_up_statuses
@@ -108,11 +108,11 @@ module Redmine
             params.merge!({ :movable_area => ".issue-card-receivers-#{group_value}" })
           else
             # enable to move other groups
-            params.merge!({ :movable_area => ".issue-board" })
+            params.merge!({ :movable_area => ".issue-panel" })
           end
         else
           # enable to move other groups
-          params.merge!({ :movable_area => ".issue-board" })
+          params.merge!({ :movable_area => ".issue-panel" })
         end
         params
       end
@@ -172,10 +172,10 @@ module Redmine
         issue_cards.html_safe
       end
 
-      def render_issues_board
-        statuses = self.board_statuses
+      def render_issues_panel
+        statuses = self.panel_statuses
 
-        # board header
+        # panel header
         thead = +''
         thead << view.content_tag('thead',
                    view.content_tag('tr',
@@ -222,7 +222,7 @@ module Redmine
           tbody << view.content_tag('tr', td_tags.html_safe, :class => "issue-card-receivers-#{group_css}")
         end
 
-        view.content_tag('table', thead.html_safe + tbody.html_safe, :id => 'issues_board', :class => 'issues-board list issues').html_safe
+        view.content_tag('table', thead.html_safe + tbody.html_safe, :id => 'issues_panel', :class => 'issues-panel list issues').html_safe
       end
     end
   end

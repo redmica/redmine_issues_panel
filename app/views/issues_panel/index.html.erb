@@ -1,6 +1,6 @@
-<% @issues_board.view = self %>
+<% @issues_panel.view = self %>
 
-<%= stylesheet_link_tag "redmine_issues_board", plugin: "redmine_issues_board" %>
+<%= stylesheet_link_tag "redmine_issues_panel", plugin: "redmine_issues_panel" %>
 
 <div class="contextual">
   <% if User.current.allowed_to?(:add_issues, @project, :global => true) && (@project.nil? || Issue.allowed_target_trackers(@project).any?) %>
@@ -8,21 +8,21 @@
   <% end %>
 </div>
 
-<h2><%= @query.new_record? ? l(:label_issues_board_plural) : @query.name %></h2>
-<% html_title(@query.new_record? ? l(:label_issues_board_plural) : @query.name) %>
+<h2><%= @query.new_record? ? l(:label_issues_panel_plural) : @query.name %></h2>
+<% html_title(@query.new_record? ? l(:label_issues_panel_plural) : @query.name) %>
 
-<%= form_tag(@project ? project_issues_board_path(@project) : issues_board_path, :method => :get, :id => 'query_form') do %>
-  <%= render :partial => 'issues_board/query_form' %>
+<%= form_tag(@project ? project_issues_panel_path(@project) : issues_panel_path, :method => :get, :id => 'query_form') do %>
+  <%= render :partial => 'issues_panel/query_form' %>
 <% end %>
 
 <% if @query.valid? %>
-  <% if @issues_board.truncated %>
-    <p class="warning"><%= l(:notice_issues_board_truncated, :max => @issues_board.issues_limit) %></p>
+  <% if @issues_panel.truncated %>
+    <p class="warning"><%= l(:notice_issues_panel_truncated, :max => @issues_panel.issues_limit) %></p>
   <% end %>
   <%= form_tag({}, :data => {:cm_url => issues_context_menu_path}) do %>
     <%= hidden_field_tag('back_url', url_for(:params => request.query_parameters), :id => nil) %>
     <div class="autoscroll">
-      <%= @issues_board.render_issues_board %>
+      <%= @issues_panel.render_issues_panel %>
     </div>
   <% end %>
 <% end %>

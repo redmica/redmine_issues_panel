@@ -1,4 +1,4 @@
-class IssuesBoardController < ApplicationController
+class IssuesPanelController < ApplicationController
   before_action :find_optional_project
 
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
@@ -9,7 +9,7 @@ class IssuesBoardController < ApplicationController
   include QueriesHelper
 
   def index
-    retrieve_issue_board(params)
+    retrieve_issue_panel(params)
   end
 
   def move_issue_card
@@ -26,15 +26,15 @@ class IssuesBoardController < ApplicationController
   rescue Exception => e
     flash.now[:error] = e.message
   ensure
-    retrieve_issue_board
+    retrieve_issue_panel
     render :layout => false
   end
 
   private
 
-  def retrieve_issue_board(params={})
-    @issues_board = Redmine::Helpers::IssuesBoard.new(params)
+  def retrieve_issue_panel(params={})
+    @issues_panel = Redmine::Helpers::IssuesPanel.new(params)
     retrieve_query
-    @issues_board.query = @query
+    @issues_panel.query = @query
   end
 end

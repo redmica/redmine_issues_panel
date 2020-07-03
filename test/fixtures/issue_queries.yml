@@ -4,7 +4,7 @@ queries_100:
   type: IssueQuery
   project_id: 1
   visibility: 2
-  name: Issues Board Query
+  name: Issues Panel Query
   filters: |
     --- 
     status_id:

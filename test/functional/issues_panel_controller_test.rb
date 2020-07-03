@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class IssuesBoardControllerTest < ActionController::TestCase
+class IssuesPanelControllerTest < ActionController::TestCase
   fixtures :users,
            :projects,
            :roles,
@@ -28,9 +28,9 @@ class IssuesBoardControllerTest < ActionController::TestCase
   end
 
   def test_index_should_forbidden_if_module_disabled
-    # Enabled Issues Board
+    # Enabled Issues Panel
     @project = Project.find(1)
-    @project.enabled_modules = [] #<< EnabledModule.new(name: 'issues_board')
+    @project.enabled_modules = [] #<< EnabledModule.new(name: 'issues_panel')
     @project.save!
 
     get :index, :params => {
@@ -39,10 +39,10 @@ class IssuesBoardControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
-  def test_index_with_issues_board_query
-    # Enabled Issues Board
+  def test_index_with_issues_panel_query
+    # Enabled Issues Panel
     @project = Project.find(1)
-    @project.enabled_modules << EnabledModule.new(name: 'issues_board')
+    @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
     @project.save!
 
     get :index, :params => {
@@ -58,8 +58,8 @@ class IssuesBoardControllerTest < ActionController::TestCase
     issue_ids_on_status_2 = [2]
     issue_ids_on_status_5 = [8, 11, 12]
 
-    # issues board
-    assert_select 'table#issues_board.issues-board' do
+    # issues panel
+    assert_select 'table#issues_panel.issues-panel' do
       assert_select 'thead' do
         assert_select 'tr' do
           assert_select 'th', "New#{issue_ids_on_status_1.count}"

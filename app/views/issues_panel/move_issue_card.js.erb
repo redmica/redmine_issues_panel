@@ -1,0 +1,23 @@
+<% @issues_panel.view = self %>
+<% if @issue_card.saved_changes? %>
+  /// remove issue card
+  $('#issue-card-<%= @issue_card.id %>').remove();
+  // refresh status total
+  $('#issues-count-on-status-<%= @issue_card.status_id_before_last_save %>').html('<%= @issues_panel.issues.select { |i| i.status_id == @issue_card.status_id_before_last_save }.count %>');
+  $('#issues-count-on-status-<%= @issue_card.status_id %>').html('<%= @issues_panel.issues.select { |i| i.status_id == @issue_card.status_id }.count %>');
+  // clear group total
+  $('.issues-count-on-group').html('0');
+  <% @issues_panel.grouped_issues do |group_value, _, group_css, group_count, issues_in_group_by_status| %>
+    // refresh group total
+    $('#issues-count-on-group-<%= group_css %>').html('<%= group_count %>');
+    // refresh issue cards in status
+    $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_panel.render_issue_cards(issues_in_group_by_status[@issue_card.status], group_value) %>');
+  <% end %>
+  loadDraggableSettings();
+<% else %>
+  <% if flash[:error].present? %>
+  alert('<%= raw(escape_javascript(flash[:error])) %>');
+  <% end %>
+  // revart issue card
+  $('#issue-card-<%= @issue_card.id %>').animate( {left: 0, top: 0}, 500 );
+<% end %>

@@ -1,5 +1,5 @@
 <%= hidden_field_tag 'set_filter', '1' %>
-<%= hidden_field_tag 'issues_board', '1' %>
+<%= hidden_field_tag 'issues_panel', '1' %>
 <%= hidden_field_tag 'type', @query.type, :disabled => true, :id => 'query_type' %>
 <%= query_hidden_sort_tag(@query) %>
 
@@ -52,8 +52,8 @@
     <% end %>
   <% else %>
     <% if @query.editable_by?(User.current) %>
-      <%= link_to l(:button_edit), edit_query_path(@query, :issues_board => 1), :class => 'icon icon-edit' %>
-      <%= delete_link query_path(@query, :issues_board => 1) %>
+      <%= link_to l(:button_edit), edit_query_path(@query, :issues_panel => 1), :class => 'icon icon-edit' %>
+      <%= delete_link query_path(@query, :issues_panel => 1) %>
     <% end %>
   <% end %>
 </p>
@@ -69,7 +69,6 @@ $(function ($) {
     } else {
       $('table#list-definition').hide();
     }
-
   })
 });
 
