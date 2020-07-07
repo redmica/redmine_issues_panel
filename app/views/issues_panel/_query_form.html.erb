@@ -1,7 +1,6 @@
 <%= hidden_field_tag 'set_filter', '1' %>
 <%= hidden_field_tag 'issues_panel', '1' %>
 <%= hidden_field_tag 'type', @query.type, :disabled => true, :id => 'query_type' %>
-<%= query_hidden_sort_tag(@query) %>
 
 <div id="query_form_with_buttons" class="hide-when-print">
 <div id="query_form_content">
@@ -33,6 +32,26 @@
             <tr>
               <td class="field"><label for='group_by'><%= l(:field_group_by) %></label></td>
               <td><%= group_by_column_select_tag(@query) %></td>
+            </tr>
+          <% end %>
+          <% if @query.sortable_columns.any? %>
+            <tr>
+              <td class="field"><label for='sort'><%= l(:label_sort) %></label></td>
+              <td>
+                <% 3.times do |i| %>
+                <%= content_tag(:span, "#{i+1}:", :class => 'query_sort_criteria_count')%>
+                <%= label_tag "query_sort_criteria_attribute_" + i.to_s,
+                              l(:description_query_sort_criteria_attribute), :class => "hidden-for-sighted" %>
+                <%= select_tag("query[sort_criteria][#{i}][]",
+                              options_for_select([[]] + @query.available_columns.select(&:sortable?).collect {|column| [column.caption, column.name.to_s]}, @query.sort_criteria_key(i)),
+                              :id => "query_sort_criteria_attribute_" + i.to_s)%>
+                <%= label_tag "query_sort_criteria_direction_" + i.to_s,
+                              l(:description_query_sort_criteria_direction), :class => "hidden-for-sighted" %>
+                <%= select_tag("query[sort_criteria][#{i}][]",
+                                options_for_select([[], [l(:label_ascending), 'asc'], [l(:label_descending), 'desc']], @query.sort_criteria_order(i)),
+                                :id => "query_sort_criteria_direction_" + i.to_s) %><br />
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </table>
