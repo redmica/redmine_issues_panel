@@ -61,6 +61,7 @@ function loadDraggableSettings() {
 function loadDroppableSetting() {
   $(".issue-card-receiver").droppable({
     accept: ".issue-card",
+    hoverClass: 'ui-droppable-hover',
     drop: function(event, ui) {
       if (ui.draggable.length > 0) {
         var org_status_id = ui.draggable.attr('data-status-id');
