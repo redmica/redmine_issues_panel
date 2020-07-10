@@ -4,11 +4,11 @@ require 'view_hook'
 
 Redmine::Plugin.register :redmine_issues_panel do
   name 'Redmine Issues Panel plugin'
-  author 'Takenori Takaki'
+  author 'Takenori Takaki (Far End Technologies)'
   description 'A plugin for Redmine to display issues by statuses and change it\'s status by DnD.'
   version '0.0.1'
-  url 'http://github.com/takenory/redmine_issues_panel'
-  author_url 'http://github.com/takenory'
+  url 'https://github.com/redmica/redmine_issues_panel'
+  author_url 'https://www.farend.co.jp'
 
   # permission setting
   project_module :issues_panel do

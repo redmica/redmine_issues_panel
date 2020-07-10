@@ -16,7 +16,7 @@ This is a plugin for Redmine to display issues by statuses and change it's statu
 `plugins/redmine_issues_panel` on your Redmine installation path.
 
 ```
-$ git clone https://github.com/takenory/redmine_issues_panel.git /path/to/redmine/plugins/redmine_issues_panel
+$ git clone https://github.com/redmica/redmine_issues_panel.git /path/to/redmine/plugins/redmine_issues_panel
 ```
 
 ## Test
@@ -41,4 +41,4 @@ This plugin is licensed under the GNU General Public License, version 2 (GPLv2)
 
 ## Author
 
-[Takenori Takaki](http://www.github.com/takenory)
+[Takenori Takaki (Far End Technologies)](https://www.farend.co.jp)
