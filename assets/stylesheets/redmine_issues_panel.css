@@ -27,7 +27,7 @@ table.issues-panel td {
 }
 
 .ui-droppable-hover {
-  border:1.5px dashed #999!important;
+  border:2px dashed #aaa!important;
 }
 
 .issue-card {
