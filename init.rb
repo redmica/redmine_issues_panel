@@ -17,5 +17,5 @@ Redmine::Plugin.register :redmine_issues_panel do
 
   # menu setting
   menu :project_menu, :issues_panel, { :controller => 'issues_panel', :action => 'index' }, :caption => :label_issues_panel_plural, :after => :issues, :param => :project_id
-  menu :application_menu, :issues_panel, { :controller => 'issues_panel', :action => 'index' }, :caption => :label_issues_panel_plural, :after => :issues
+  menu :application_menu, :issues_panel, { :controller => 'issues_panel', :action => 'index' }, :caption => :label_issues_panel_plural, :after => :issues, :if => proc { User.current.allowed_to?(:view_issues, nil, :global => true) && EnabledModule.exists?(:project => Project.visible, :name => :issues_panel) }
 end
