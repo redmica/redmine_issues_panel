@@ -128,6 +128,8 @@ module Redmine
           value = view.avatar(issue.author, :size => "13") + " " + view.link_to_user(issue.author)
         when :assigned_to
           value = issue.assigned_to ? view.assignee_avatar(issue.assigned_to, :size => "13") + " " + view.link_to_user(issue.assigned_to) : "-"
+        when :due_date
+          value = view.issue_due_date_details(issue) || ''
         else
           value = view.column_content(column, issue) || ''
         end
@@ -155,7 +157,7 @@ module Redmine
               :class => 'footer clear').html_safe, 
             :class => "card-content"),
           :id => "issue-#{issue.id}",
-          :class => "hascontextmenu #{issue.priority.try(:css_classes)} #{issue.closed? ? 'closed' : ''}"
+          :class => "hascontextmenu #{issue.priority.try(:css_classes)} #{issue.overdue? ? 'overdue' : ''} #{issue.closed? ? 'closed' : ''}"
         ).html_safe
       end
 
