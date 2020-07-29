@@ -52,10 +52,10 @@ function loadDraggableSettings() {
         }
       },
       opacity: 0.9,
-      zIndex: 100,
-      start: function() { $(this).css({ transform: 'rotate(10deg)', zIndex: 100 }); },
+      zIndex: 10,
+      start: function() { $(this).css({ transform: 'rotate(10deg)', zIndex: 10 }); },
       drag: function() { $('.hascontextmenu').removeClass('context-menu-selection cm-last');contextMenuHide(); },
-      stop: function() { $(this).css({ transform: 'rotate(0deg)', zIndex: 100 }); }
+      stop: function() { $(this).css({ transform: 'rotate(0deg)', zIndex: 10 }); }
     });
   });
 }
