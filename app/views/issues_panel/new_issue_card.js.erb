@@ -1,0 +1,7 @@
+$('#new-issue-card-modal').html(
+  '<%= escape_javascript(
+         render(:partial => 'issues_panel/modal_form',
+                :locals => {:issue => @issue})
+       ) %>');
+showModal('new-issue-card-modal', '400px');
+$('#new-issue-card-modal').addClass('new-issue-card');

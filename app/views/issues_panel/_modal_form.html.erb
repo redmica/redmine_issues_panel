@@ -1,0 +1,120 @@
+<h3 class="title"><%= l(:label_issue_new) %></h3>
+<%= labelled_form_for @issue_card, :url => _project_issues_path(@project), :as => 'issue',
+                             :html => {:id => 'issue-form', :multipart => true} do |f| %>
+  <%= error_messages_for 'issue' %>
+  <%= hidden_field_tag 'project_id', params[:project_id] if params[:project_id] %>
+  <%= hidden_field_tag 'back_url', params[:back_url] if params[:back_url] %>
+  <div class="box tabular issue-card-form">
+    <div id="all_attributes">
+        <div class="splitcontentleft">
+
+          <% projects = @issue_card.allowed_target_projects(User.current, @project) %>
+          <% if @issue_card.safe_attribute?('project_id') && (@project.nil? || projects.length > 1) %>
+            <p>
+              <%= f.select :project_id, project_tree_options_for_select(projects, :selected => @issue_card.project), {:required => true},
+                           :onchange => "updateIssueFrom('#{escape_javascript new_issue_card_path}', this)" %>
+            </p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute?('tracker_id') || (@issue_card.persisted? && @issue_card.tracker_id_changed?) %>
+            <p>
+              <%= f.select :tracker_id, trackers_options_for_select(@issue_card), {:required => true},
+                           :onchange => "updateIssueFrom('#{escape_javascript new_issue_card_path}', this)" %>
+            </p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute? 'subject' %>
+            <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute?('status_id') && @allowed_statuses.present? %>
+            <p>
+              <%= f.select :status_id, (@allowed_statuses.collect {|p| [p.name, p.id]}), {:required => true},
+                           :onchange => "updateIssueFrom('#{escape_javascript new_issue_card_path}', this)" %>
+            </p>
+          <% else %>
+            <p><label><%= l(:field_status) %></label> <%= @issue_card.status %></p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute? 'priority_id' %>
+            <p><%= f.select :priority_id, (@priorities.collect {|p| [p.name, p.id]}), {:required => true} %></p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute? 'assigned_to_id' %>
+            <p>
+              <%= f.select :assigned_to_id, principals_options_for_select(@issue_card.assignable_users, @issue_card.assigned_to),
+                              :include_blank => true, :required => @issue_card.required_attribute?('assigned_to_id') %>
+              <% if @issue_card.assignable_users.include?(User.current) %>
+                <a class="assign-to-me-link<%= ' hidden' if @issue_card.assigned_to_id == User.current.id %>" href="#" data-id="<%= User.current.id %>"><%= l(:label_assign_to_me) %></a>
+              <% end %>
+            </p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute?('category_id') && @issue_card.project.issue_categories.any? %>
+            <p>
+              <%= f.select :category_id, (@issue_card.project.issue_categories.collect {|c| [c.name, c.id]}),
+                           {:include_blank => true, :required => @issue_card.required_attribute?('category_id')},
+                           :onchange => "updateIssueFrom('#{escape_javascript new_issue_card_path}', this)" %>
+              <%= link_to(l(:label_issue_category_new),
+                          new_project_issue_category_path(@issue_card.project),
+                          :remote => true,
+                          :method => 'get',
+                          :title => l(:label_issue_category_new),
+                          :tabindex => 200,
+                          :class => 'icon-only icon-add'
+                         ) if User.current.allowed_to?(:manage_categories, @issue_card.project) %>
+            </p>
+          <% end %>
+
+          <% if @issue_card.safe_attribute?('fixed_version_id') && @issue_card.assignable_versions.any? %>
+            <p>
+              <%= f.select :fixed_version_id, version_options_for_select(@issue_card.assignable_versions, @issue_card.fixed_version),
+                           :include_blank => true, :required => @issue_card.required_attribute?('fixed_version_id') %>
+              <%= link_to(l(:label_version_new),
+                          new_project_version_path(@issue_card.project),
+                          :remote => true,
+                          :method => 'get',
+                          :title => l(:label_version_new),
+                          :tabindex => 200,
+                          :class => 'icon-only icon-add'
+                         ) if User.current.allowed_to?(:manage_versions, @issue_card.project) %>
+            </p>
+          <% end %>
+        </div>
+    </div>
+  </div>
+
+  <%= submit_tag l(:button_create) %>
+<% end %>
+
+<% content_for :header_tags do %>
+    <%= robot_exclusion_tag %>
+<% end %>
+
+<%= javascript_tag do %>
+$(document).ready(function(){
+  $("#issue_tracker_id, #issue_status_id").each(function(){
+    $(this).val($(this).find("option[selected=selected]").val());
+  });
+  $(".assign-to-me-link").click(function(event){
+    event.preventDefault();
+    var element = $(event.target);
+    $('#issue_assigned_to_id').val(element.data('id'));
+    element.hide();
+  });
+  $('#issue_assigned_to_id').change(function(event){
+    var assign_to_me_link = $(".assign-to-me-link");
+
+    if (assign_to_me_link.length > 0) {
+      var user_id = $(event.target).val();
+      var current_user_id = assign_to_me_link.data('id');
+
+      if (user_id == current_user_id) {
+        assign_to_me_link.hide();
+      } else {
+        assign_to_me_link.show();
+      }
+    }
+  });
+});
+<% end %>

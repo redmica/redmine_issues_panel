@@ -101,3 +101,25 @@ table.issues-panel td {
 .card-content .footer a {
   float: right;
 }
+
+.add-issue-card {
+  background-color: #fff;
+}
+.issue-card-form div.splitcontentleft {
+  flex: none;
+}
+.issue-card-form div.splitcontentleft p {
+  padding-left: 100px;
+}
+.issue-card-form div.splitcontentleft p select {
+  max-width: 90%;
+}
+
+@media screen and (max-width: 899px) {
+  .issue-card-form div.splitcontentleft p {
+    padding-left: 0px;
+  }
+  .issue-card-form div.splitcontentleft p select#issue_assigned_to_id {
+    max-width: 60%;
+  }
+}
