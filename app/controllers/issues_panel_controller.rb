@@ -35,9 +35,7 @@ class IssuesPanelController < ApplicationController
   def new_issue_card
     @issue_card = IssueCard.new
     @issue_card.project = @project
-    if request.get?
-      @issue_card.project ||= @issue_card.allowed_target_projects.first
-    end
+    @issue_card.project ||= @issue_card.allowed_target_projects.first
     @issue_card.author ||= User.current
     @issue_card.start_date ||= User.current.today if Setting.default_issue_start_date_to_creation_date?
     attrs = (params[:issue] || {}).deep_dup
