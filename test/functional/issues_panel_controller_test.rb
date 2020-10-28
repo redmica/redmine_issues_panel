@@ -142,4 +142,25 @@ class IssuesPanelControllerTest < ActionController::TestCase
     assert_match "alert('#{error_message_on_move}')", response.body
     assert_match "('#issue-card-1').animate( {left: 0, top: 0}, 500 );", response.body
   end
+
+  def assert_modal_issue_card()
+    assert_match "showModal('new-issue-card-modal', '400px');", response.body
+    assert_match "$('#new-issue-card-modal').addClass('new-issue-card');", response.body
+  end
+
+  def test_new_issue_card
+    get :new_issue_card, :xhr => true, :params => {
+      :status_id => 5
+    }
+    assert_response :success
+    assert_modal_issue_card
+  end
+
+  def test_new_issue_card_method_post
+    post :new_issue_card, :xhr => true, :params => {
+      :status_id => 5
+    }
+    assert_response :success
+    assert_modal_issue_card
+  end
 end

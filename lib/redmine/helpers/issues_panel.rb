@@ -5,6 +5,7 @@ module Redmine
       include ERB::Util
       include Rails.application.routes.url_helpers
       include Redmine::I18n
+      include IssuesPanelHelper
 
       attr_reader :truncated, :issues_limit
       attr_accessor :query, :view
@@ -161,15 +162,31 @@ module Redmine
         ).html_safe
       end
 
-      def render_issue_cards(issues_in_status, group_value)
+      def render_issue_cards(issues_in_status, status, group_value)
         issue_cards = +''
         (issues_in_status || []).each do |issue|
           issue_cards << view.content_tag('div',
                            render_card_content(issue),
                            :class => "issue-card",
                            :id => "issue-card-#{issue.id}",
-                           :data => { :issue_id => issue.id, :status_id => issue.status_id, :group_value => group_value }
+                           :data => { :issue_id => issue.id, :status_id => status.id, :group_value => group_value }
                          )
+        end
+        if issue = Issue.new(:project => @query.project)
+          issue.project ||= issue.allowed_target_projects.first
+          issue.tracker ||= issue.allowed_target_trackers.first
+          if issue.new_statuses_allowed_to(User.current).include?(status)
+            new_issue_params = {:status_id => status.id}
+            new_issue_params[:"#{@query.group_by}_id"] = group_value if @query.grouped?
+            issue_cards << view.content_tag('div',
+                             view.link_to(l(:label_issue_new),
+                               view.new_issue_card_path({ :params => { :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) } }),
+                               :remote => true,
+                               :class => 'icon icon-add new-issue'),
+                             :class => "issue-card add-issue-card",
+                             :data => { :status_id => status.id, :group_value => group_value }
+                           )
+          end
         end
         issue_cards.html_safe
       end
@@ -214,7 +231,7 @@ module Redmine
           column_names = @query.inline_columns.collect{ |c| c.name }
           statuses.each do |status|
             td_tags << view.content_tag('td',
-                         render_issue_cards(issues_in_group_by_status[status], group_value),
+                         render_issue_cards(issues_in_group_by_status[status], status, group_value),
                          :class => "issue-card-receiver",
                          :id => "issue-card-receiver-#{group_css}-#{status.id}",
                          :data => move_params(group_value, status)

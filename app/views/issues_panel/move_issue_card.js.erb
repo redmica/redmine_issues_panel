@@ -11,7 +11,7 @@
     // refresh group total
     $('#issues-count-on-group-<%= group_css %>').html('<%= group_count %>');
     // refresh issue cards in status
-    $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_panel.render_issue_cards(issues_in_group_by_status[@issue_card.status], group_value) %>');
+    $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_panel.render_issue_cards(issues_in_group_by_status[@issue_card.status], @issue_card.status, group_value) %>');
   <% end %>
   // restore background-color
   $('#issue-<%= @issue_card.id %>').addClass('context-menu-selection cm-last', 500);

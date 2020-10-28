@@ -13,7 +13,7 @@ Redmine::Plugin.register :redmine_issues_panel do
 
   # permission setting
   project_module :issues_panel do
-    permission :use_issues_panel, { :issues_panel => [:index, :move_issue_card] }, :public => true, :require => :member
+    permission :use_issues_panel, { :issues_panel => [:index, :move_issue_card, :new_issue_card] }, :public => true, :require => :member
   end
 
   # menu setting
