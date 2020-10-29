@@ -80,6 +80,16 @@
                          ) if User.current.allowed_to?(:manage_versions, @issue_card.project) %>
             </p>
           <% end %>
+
+          <% custom_field_values = @issue_card.editable_custom_field_values %>
+          <% if custom_field_values.present? %>
+            <% custom_field_values.each do |value| %>
+              <% if value.custom_field.is_required? %>
+              <%# if @issue_card.required_attribute?(value.custom_field_id) %>
+                <p><%= custom_field_tag_with_label :issue, value, :required => @issue_card.required_attribute?(value.custom_field_id) %></p>
+              <% end %>
+            <% end -%>
+          <% end %>
         </div>
     </div>
   </div>
