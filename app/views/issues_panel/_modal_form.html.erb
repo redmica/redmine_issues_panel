@@ -84,7 +84,10 @@
     </div>
   </div>
 
-  <%= submit_tag l(:button_create) %>
+  <p class="buttons">
+    <%= submit_tag l(:button_create), :name => nil %>
+    <%= link_to_function l(:button_cancel), "hideModal(this);" %>
+  </p>
 <% end %>
 
 <% content_for :header_tags do %>
