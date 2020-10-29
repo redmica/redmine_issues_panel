@@ -115,6 +115,11 @@ table.issues-panel td {
   max-width: 90%;
 }
 
+body.controller-issues_panel .ui-widget-overlay+.ui-dialog+.ui-widget-overlay,
+body.controller-issues_panel .ui-widget-overlay+.ui-widget-overlay {
+  display: none;
+}
+
 @media screen and (max-width: 899px) {
   .issue-card-form div.splitcontentleft p {
     padding-left: 0px;
