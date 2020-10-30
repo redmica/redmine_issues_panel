@@ -4,6 +4,11 @@
   <%= error_messages_for 'issue' %>
   <%= hidden_field_tag 'project_id', params[:project_id] if params[:project_id] %>
   <%= hidden_field_tag 'back_url', params[:back_url] if params[:back_url] %>
+  <% if @issue_card.safe_attribute? 'is_private' %>
+    <p id="issue_is_private_wrap">
+      <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:field_is_private) %></label>
+    </p>
+  <% end %>
   <div class="box tabular issue-card-form">
     <div id="all_attributes">
         <div class="splitcontentleft">

@@ -105,6 +105,9 @@ table.issues-panel td {
 .add-issue-card {
   background-color: #fff;
 }
+#new-issue-card-modal p#issue_is_private_wrap {
+  margin-bottom: 0px
+}
 .issue-card-form div.splitcontentleft {
   flex: none;
 }
