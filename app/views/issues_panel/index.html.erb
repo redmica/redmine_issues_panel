@@ -97,6 +97,23 @@ $(document).ready(function(){
     var issue_id = $(this).attr('data-issue-id');
     window.location.href='<%= issues_path %>/' + issue_id;
   });
+  $('.add-issue-card').click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      dataType: "jsonp",
+      url: $(this).data('url'),
+      timeout: 10000,
+      beforeSend: function(){
+        $('#ajax-indicator').show();
+      },
+      success: function(data){
+        $('#ajax-indicator').hide();
+      },
+      error: function(){
+        $('#ajax-indicator').hide();
+      }
+    });
+  });
   loadDraggableSettings();
   loadDroppableSetting();
 });
