@@ -127,6 +127,10 @@ body.controller-issues_panel .ui-widget-overlay+.ui-widget-overlay {
   display: none;
 }
 
+#ajax-indicator {
+  z-index: 120;
+}
+
 @media screen and (max-width: 899px) {
   .issue-card-form div.splitcontentleft p {
     padding-left: 0px;
