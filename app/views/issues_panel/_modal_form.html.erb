@@ -4,6 +4,11 @@
   <%= error_messages_for 'issue' %>
   <%= hidden_field_tag 'project_id', params[:project_id] if params[:project_id] %>
   <%= hidden_field_tag 'back_url', params[:back_url] if params[:back_url] %>
+  <% if @issue_card.safe_attribute? 'is_private' %>
+    <p id="issue_is_private_wrap">
+      <%= f.check_box :is_private, :no_label => true %><label class="inline" for="issue_is_private" id="issue_is_private_label"><%= l(:field_is_private) %></label>
+    </p>
+  <% end %>
   <div class="box tabular issue-card-form">
     <div id="all_attributes">
         <div class="splitcontentleft">
@@ -80,11 +85,23 @@
                          ) if User.current.allowed_to?(:manage_versions, @issue_card.project) %>
             </p>
           <% end %>
+
+          <% custom_field_values = @issue_card.editable_custom_field_values %>
+          <% if custom_field_values.present? %>
+            <% custom_field_values.each do |value| %>
+              <% if value.custom_field.is_required? || (params[:issue] && params[:issue][:custom_field_values].keys.include?(value.custom_field.id.to_s)) %>
+                <p><%= custom_field_tag_with_label :issue, value, :required => @issue_card.required_attribute?(value.custom_field_id) %></p>
+              <% end %>
+            <% end -%>
+          <% end %>
         </div>
     </div>
   </div>
 
-  <%= submit_tag l(:button_create) %>
+  <p class="buttons">
+    <%= submit_tag l(:button_create), :name => nil %>
+    <%= link_to_function l(:button_cancel), "hideModal(this);" %>
+  </p>
 <% end %>
 
 <% content_for :header_tags do %>

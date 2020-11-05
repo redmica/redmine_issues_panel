@@ -167,7 +167,7 @@ module Redmine
         (issues_in_status || []).each do |issue|
           issue_cards << view.content_tag('div',
                            render_card_content(issue),
-                           :class => "issue-card",
+                           :class => "issue-card link-issue",
                            :id => "issue-card-#{issue.id}",
                            :data => { :issue_id => issue.id, :status_id => status.id, :group_value => group_value }
                          )
@@ -177,14 +177,25 @@ module Redmine
           issue.tracker ||= issue.allowed_target_trackers.first
           if issue.new_statuses_allowed_to(User.current).include?(status)
             new_issue_params = {:status_id => status.id}
-            new_issue_params[:"#{@query.group_by}_id"] = group_value if @query.grouped?
+            #new_issue_params[:"#{@query.group_by}_id"] = group_value if @query.grouped?
+            if self.grouped?
+              if @query.group_by_column.instance_of?(QueryColumn)
+                case @query.group_by_column.name
+                when :project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version
+                  new_issue_params.merge!({ :"#{@query.group_by}_id" => group_value })
+                when :author
+                  # author can't spacify
+                else
+                  new_issue_params.merge!({ :"#{@query.group_by}" => group_value })
+                end
+              elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
+                new_issue_params.merge!({ :custom_field_values => {@query.group_by_column.custom_field.id => group_value} })
+              end
+            end
             issue_cards << view.content_tag('div',
-                             view.link_to(l(:label_issue_new),
-                               view.new_issue_card_path({ :params => { :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) } }),
-                               :remote => true,
-                               :class => 'icon icon-add new-issue'),
+                             view.link_to(l(:label_issue_new), '', :class => 'icon icon-add new-issue'),
                              :class => "issue-card add-issue-card",
-                             :data => { :status_id => status.id, :group_value => group_value }
+                             :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) }) }
                            )
           end
         end

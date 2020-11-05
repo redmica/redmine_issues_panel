@@ -105,6 +105,9 @@ table.issues-panel td {
 .add-issue-card {
   background-color: #fff;
 }
+#new-issue-card-modal p#issue_is_private_wrap {
+  margin-bottom: 0px
+}
 .issue-card-form div.splitcontentleft {
   flex: none;
 }
@@ -114,6 +117,19 @@ table.issues-panel td {
 .issue-card-form div.splitcontentleft p select {
   max-width: 90%;
 }
+.issue-card-form div.splitcontentleft label {
+  margin-left: -100px;
+  width: 90px;
+}
+
+body.controller-issues_panel .ui-widget-overlay+.ui-dialog+.ui-widget-overlay,
+body.controller-issues_panel .ui-widget-overlay+.ui-widget-overlay {
+  display: none;
+}
+
+#ajax-indicator {
+  z-index: 120;
+}
 
 @media screen and (max-width: 899px) {
   .issue-card-form div.splitcontentleft p {
@@ -121,5 +137,9 @@ table.issues-panel td {
   }
   .issue-card-form div.splitcontentleft p select#issue_assigned_to_id {
     max-width: 60%;
+  }
+  .issue-card-form div.splitcontentleft label {
+    margin-left: 0px;
+    width: 100%;
   }
 }
