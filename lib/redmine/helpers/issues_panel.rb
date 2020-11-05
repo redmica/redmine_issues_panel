@@ -177,7 +177,21 @@ module Redmine
           issue.tracker ||= issue.allowed_target_trackers.first
           if issue.new_statuses_allowed_to(User.current).include?(status)
             new_issue_params = {:status_id => status.id}
-            new_issue_params[:"#{@query.group_by}_id"] = group_value if @query.grouped?
+            #new_issue_params[:"#{@query.group_by}_id"] = group_value if @query.grouped?
+            if self.grouped?
+              if @query.group_by_column.instance_of?(QueryColumn)
+                case @query.group_by_column.name
+                when :project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version
+                  new_issue_params.merge!({ :"#{@query.group_by}_id" => group_value })
+                when :author
+                  # author can't spacify
+                else
+                  new_issue_params.merge!({ :"#{@query.group_by}" => group_value })
+                end
+              elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
+                new_issue_params.merge!({ :custom_field_values => {@query.group_by_column.custom_field.id => group_value} })
+              end
+            end
             issue_cards << view.content_tag('div',
                              view.link_to(l(:label_issue_new), '', :class => 'icon icon-add new-issue'),
                              :class => "issue-card add-issue-card",
