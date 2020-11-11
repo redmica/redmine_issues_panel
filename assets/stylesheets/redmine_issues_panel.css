@@ -102,7 +102,10 @@ table.issues-panel td {
   float: right;
 }
 
-.add-issue-card {
+th > .add-issue-card {
+  background-color: transparent;
+}
+td > .add-issue-card {
   background-color: #fff;
 }
 
