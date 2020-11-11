@@ -123,7 +123,7 @@ table.issues-panel td {
   margin-right: 10px;
   width: 100px;
 }
-.issue-card-form > #all_attributes > .splitcontentleft > p > select#issue_tracker_id,select#issue_category_id,select#issue_fixed_version_id {
+.issue-card-form > #all_attributes > .splitcontentleft > p > select#issue_project_id,select#issue_tracker_id,select#issue_category_id,select#issue_fixed_version_id {
   max-width: 85%;
 }
 .issue-card-form > #all_attributes > .splitcontentleft a {
@@ -147,7 +147,7 @@ body.controller-issues_panel .ui-widget-overlay+.ui-widget-overlay {
     margin-left: 0px;
     width: 100%;
   }
-  .issue-card-form > div#all_attributes > div.splitcontentleft > p > select#issue_tracker_id {
+  .issue-card-form > div#all_attributes > div.splitcontentleft > p > select#issue_project_id,select#issue_tracker_id {
     width: 100%;
     max-width: 100%;
   }
