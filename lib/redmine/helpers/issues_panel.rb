@@ -205,6 +205,11 @@ module Redmine
       def render_issues_panel
         statuses = self.panel_statuses
 
+        # issue data for add issue card link
+        new_issue = Issue.new(:project => @query.project)
+        new_issue.project ||= new_issue.allowed_target_projects.first
+        new_issue.tracker ||= new_issue.allowed_target_trackers.first
+
         # panel header
         thead = +''
         thead << view.content_tag('thead',
@@ -215,7 +220,12 @@ module Redmine
                          view.content_tag('span',
                            issues_count = self.issues.select { |issue| issue.status_id == s.id }.count,
                            :id => "issues-count-on-status-#{s.id}",
-                           :class => 'badge badge-count count').html_safe,
+                           :class => 'badge badge-count count').html_safe +
+                          (new_issue && new_issue.new_statuses_allowed_to(User.current).include?(s) ?
+                            view.link_to('', '',
+                              :class => 'icon icon-add new-issue add-issue-card',
+                              :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => { :status_id => s.id }, :back_url => _project_issues_panel_path(@query.project) }) }
+                            ) : '').html_safe
                        )}.join.html_safe
                    )
                  )
