@@ -105,21 +105,29 @@ table.issues-panel td {
 .add-issue-card {
   background-color: #fff;
 }
-#new-issue-card-modal p#issue_is_private_wrap {
-  margin-bottom: 0px
+
+.issue-card-form {
+  padding: 5:px;
 }
-.issue-card-form div.splitcontentleft {
+.issue-card-form > #all_attributes > .splitcontentleft {
   flex: none;
 }
-.issue-card-form div.splitcontentleft p {
+.issue-card-form > #all_attributes > .splitcontentleft > p {
   padding-left: 100px;
 }
-.issue-card-form div.splitcontentleft p select {
-  max-width: 90%;
+.issue-card-form > #all_attributes > .splitcontentleft > p#issue_is_private_wrap {
+  padding: 0px;
 }
-.issue-card-form div.splitcontentleft label {
+.issue-card-form > #all_attributes > .splitcontentleft p > label {
   margin-left: -100px;
-  width: 90px;
+  margin-right: 10px;
+  width: 100px;
+}
+.issue-card-form > #all_attributes > .splitcontentleft > p > select#issue_tracker_id,select#issue_category_id,select#issue_fixed_version_id {
+  max-width: 85%;
+}
+.issue-card-form > #all_attributes > .splitcontentleft a {
+  display: inline-block;
 }
 
 body.controller-issues_panel .ui-widget-overlay+.ui-dialog+.ui-widget-overlay,
@@ -132,14 +140,15 @@ body.controller-issues_panel .ui-widget-overlay+.ui-widget-overlay {
 }
 
 @media screen and (max-width: 899px) {
-  .issue-card-form div.splitcontentleft p {
+  .issue-card-form > #all_attributes > .splitcontentleft > p {
     padding-left: 0px;
   }
-  .issue-card-form div.splitcontentleft p select#issue_assigned_to_id {
-    max-width: 60%;
-  }
-  .issue-card-form div.splitcontentleft label {
+  .issue-card-form > #all_attributes > .splitcontentleft > p > label {
     margin-left: 0px;
     width: 100%;
+  }
+  .issue-card-form > div#all_attributes > div.splitcontentleft > p > select#issue_tracker_id {
+    width: 100%;
+    max-width: 100%;
   }
 }
