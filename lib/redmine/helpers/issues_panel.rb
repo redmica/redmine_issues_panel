@@ -142,6 +142,7 @@ module Redmine
       end
 
       def render_card_content(issue)
+        issue = issue.becomes(IssueCard)
         view.content_tag('div',
           view.content_tag('div',
             view.content_tag('input', nil, :type => 'checkbox', :name => 'ids[]', :value => issue.id, :style => 'display:none;', :class => 'toggle-selection').html_safe +

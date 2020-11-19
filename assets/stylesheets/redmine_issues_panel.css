@@ -87,11 +87,6 @@ table.issues-panel td {
   float: left;
   padding-right: 2px;
 }
-.card-content .header a.closed {
-  background-image: url(../../../images/true.png);
-  background-repeat: no-repeat;
-  padding-left: 18px;
-}
 .card-content .header .js-contextmenu {
   float: right;
 }

@@ -28,4 +28,11 @@ class IssueCard < Issue
       self.save!
     end
   end
+
+  # Override Issue#css_classes
+  def css_classes(user=User.current)
+    s = super
+    s << ' icon icon-checked' if closed?
+    s
+  end
 end

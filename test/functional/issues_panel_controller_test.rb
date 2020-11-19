@@ -144,7 +144,7 @@ class IssuesPanelControllerTest < ActionController::TestCase
   end
 
   def assert_modal_issue_card()
-    assert_match "showModal('new-issue-card-modal', '400px');", response.body
+    assert_match "showModal('new-issue-card-modal', '450px');", response.body
     assert_match "$('#new-issue-card-modal').addClass('new-issue-card');", response.body
   end
 
