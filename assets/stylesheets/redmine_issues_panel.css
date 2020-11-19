@@ -103,6 +103,9 @@ th > .add-issue-card {
 td > .add-issue-card {
   background-color: #fff;
 }
+td > .add-issue-card:hover {
+  cursor: pointer;
+}
 
 .issue-card-form {
   padding: 5:px;
