@@ -61,4 +61,16 @@ class IssueCardTest < ActiveSupport::TestCase
     issue_card.move!({ :group_key => 'custom_field_values', :group_value => '1,PostgreSQL'})
     assert_equal 'PostgreSQL', issue_card.custom_field_value(field.id)
   end
+
+  def test_css_classes_include_icon_checked
+    closed_issue_card = IssueCard.find(8)
+    closed_classes = closed_issue_card.css_classes.split(' ')
+    assert_include 'icon', closed_classes
+    assert_include 'icon-checked', closed_classes
+
+    issue_card = IssueCard.find(1)
+    classes = issue_card.css_classes.split(' ')
+    assert_not_include 'icon', classes
+    assert_not_include 'icon-checked', classes
+  end
 end
