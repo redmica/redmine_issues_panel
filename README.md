@@ -7,6 +7,7 @@ This is a plugin for Redmine to display issues by statuses and change it's statu
 * Filter and group issues with custom queries
 * Drag and drop to change status
 * Update issues via the context menu
+* Add a new Issue from the panel
 
 ## Install
 
