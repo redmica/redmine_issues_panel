@@ -39,8 +39,8 @@ class IssuesPanelController < ApplicationController
     @issue_card.author ||= User.current
     @issue_card.start_date ||= User.current.today if Setting.default_issue_start_date_to_creation_date?
     attrs = (params[:issue] || {}).deep_dup
-    @issue_card.safe_attributes = attrs
     @issue_card.instance_variable_set(:@safe_attribute_names, ['project_id', 'tracker_id', 'status_id', 'category_id', 'assigned_to_id', 'priority_id', 'fixed_version_id', 'subject', 'is_private'])
+    @issue_card.safe_attributes = attrs
     @allowed_statuses = @issue_card.new_statuses_allowed_to(User.current)
     @priorities = IssuePriority.active
   end

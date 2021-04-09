@@ -6,6 +6,8 @@ module Redmine
       include Rails.application.routes.url_helpers
       include Redmine::I18n
       include IssuesPanelHelper
+      include VersionsHelper
+      include ActionView::Helpers::UrlHelper
 
       attr_reader :truncated, :issues_limit
       attr_accessor :query, :view
@@ -182,22 +184,58 @@ module Redmine
             if self.grouped?
               if @query.group_by_column.instance_of?(QueryColumn)
                 case @query.group_by_column.name
-                when :project, :tracker, :status, :priority, :assigned_to, :category, :fixed_version
+                when :project
+                  if group_value.present?
+                    project = Project.find(group_value) rescue nil
+                    # 当該プロジェクトのチケット一覧画面で「新しいチケット」のリンクを表示する基準
+                    if User.current.allowed_to?(:add_issues, project, :global => true) && (project.nil? || Issue.allowed_target_trackers(project).any?)
+                      new_issue_params.merge!({ :"#{@query.group_by}_id" => group_value })
+                    else
+                      # do not display + button
+                      new_issue_params = {}
+                    end
+                  else
+                    # do not display + button
+                    new_issue_params = {}
+                  end
+                when :fixed_version
                   new_issue_params.merge!({ :"#{@query.group_by}_id" => group_value })
-                when :author
-                  # author can't spacify
-                else
+                  if group_value.present?
+                    version = Version.find(group_value)
+                    # バージョン詳細画面(views/versions/show.html.erb)で「新しいチケット」のリンクを表示する基準
+                    # enable link to new issue?
+                    if link_to_new_issue(version, version.project)
+                    #if version.open? && User.current.allowed_to?(:add_issues, version.project)
+                      new_issue_params.merge!({ :project_id => version.project_id })
+                    else
+                      # do not display + button
+                      new_issue_params = {}
+                    end
+                  end
+                when :tracker, :status, :priority, :assigned_to, :category
+                  new_issue_params.merge!({ :"#{@query.group_by}_id" => group_value })
+                when :is_private
                   new_issue_params.merge!({ :"#{@query.group_by}" => group_value })
+                else
+                  # author, created_on, updated_on, closed_on, start_date, due_date, done_ratio
+                  # do not display + button
+                  new_issue_params = {}
                 end
               elsif @query.group_by_column.instance_of?(QueryCustomFieldColumn)
-                new_issue_params.merge!({ :custom_field_values => {@query.group_by_column.custom_field.id => group_value} })
+                # do not display + button
+                new_issue_params = {}
+              else
+                # do not display + button
+                new_issue_params = {}
               end
             end
-            issue_cards << view.content_tag('div',
-                             view.link_to(l(:label_issue_new), '', :class => 'icon icon-add new-issue'),
-                             :class => "issue-card add-issue-card",
-                             :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) }) }
-                           )
+            if new_issue_params.any?
+              issue_cards << view.content_tag('div',
+                               view.link_to(l(:label_issue_new), '', :class => 'icon icon-add new-issue'),
+                               :class => "issue-card add-issue-card",
+                               :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) }) }
+                             )
+            end
           end
         end
         issue_cards.html_safe
