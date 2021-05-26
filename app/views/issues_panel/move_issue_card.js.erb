@@ -15,6 +15,7 @@
   <% end %>
   // restore background-color
   $('#issue-<%= @issue_card.id %>').addClass('context-menu-selection cm-last', 500);
+  loadCardFunctions();
   loadDraggableSettings();
 <% else %>
   <% if flash[:error].present? %>
