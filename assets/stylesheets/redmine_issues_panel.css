@@ -19,25 +19,57 @@ table.issues-panel td {
   vertical-align: top;
   background-color: #fffffb;
   border: 1px solid #e4e4e4;
+  text-align: left;
 }
 
 .issue-card-receiver {
   border:1px dashed #fff;
-  padding: 15px 0 0 0;
+  padding: 15px 4px 2px 4px!important;
 }
 
 .ui-droppable-hover {
   border:2px dashed #aaa!important;
 }
 
+.issue-cards {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
 .issue-card {
   border: 1px solid #ddd;
-  margin: 4px 8px 10px 8px;
   color: #505050;
-  line-height: 1.5em;
   border-radius: 3px;
   background-color: #ffffdd;
   word-break: break-all;
+  vertical-align: top;
+}
+
+.issue-card-1-1 {
+  margin: 2px;
+  width: 98%;
+}
+
+.issue-card-1-2 {
+  margin: 2px 1px;
+  flex: 1 1 calc(100% / 2.2);
+}
+
+.issue-card-1-3 {
+  margin: 2px 1px;
+  flex: 1 1 calc(100% / 3.3);
+}
+
+.add-issue-card {
+  margin: 2px;
+  width: 98%;
+  text-align: center;
 }
 
 .issue-card>.contextual {
@@ -97,13 +129,13 @@ table.issues-panel td {
   float: right;
 }
 
-th > .add-issue-card {
+th > .issue-cards > .add-issue-card {
   background-color: transparent;
 }
-td > .add-issue-card {
+td > .issue-cards > .add-issue-card {
   background-color: #fff;
 }
-td > .add-issue-card:hover {
+td > .issue-cards > .add-issue-card:hover {
   cursor: pointer;
 }
 

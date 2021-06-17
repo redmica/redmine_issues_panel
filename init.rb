@@ -1,6 +1,7 @@
 require 'redmine'
 require 'queries_controller_patch'
 require 'view_hook'
+require 'issue_query_patch'
 
 Redmine::Plugin.register :redmine_issues_panel do
   name 'Redmine Issues Panel plugin'

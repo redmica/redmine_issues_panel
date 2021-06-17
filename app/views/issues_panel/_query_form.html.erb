@@ -34,6 +34,13 @@
               <td><%= group_by_column_select_tag(@query) %></td>
             </tr>
           <% end %>
+          <tr>
+            <td class="field"><label for='issues_num_per_row'><%= l(:field_issues_num_per_row) %></label></td>
+            <td>
+              <%= hidden_field_tag 'selected_query_issues_num_per_row', @query.issues_num_per_row %>
+              <%= select_tag 'query[issues_num_per_row]', options_for_select([1, 2, 3], @query.issues_num_per_row) %>
+            </td>
+          </tr>
           <% if @query.sortable_columns.any? %>
             <tr>
               <td class="field"><label for='sort'><%= l(:label_sort) %></label></td>
