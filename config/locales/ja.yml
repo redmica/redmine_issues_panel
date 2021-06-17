@@ -4,6 +4,7 @@ ja:
   notice_issues_panel_truncated: "チケットパネルは、最大表示件数(%{max})を超えたため切り捨てられました。"
   notice_not_authorized_to_change_this_issue: "このチケットの変更は許可されていません。"
   notice_failed_to_move_issue: "チケットの移動に失敗しました。"
+  field_issues_num_per_row: "一行ごとのチケット数"
 
   project_module_issues_panel: "チケットパネル"
 

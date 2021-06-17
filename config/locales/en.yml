@@ -4,6 +4,7 @@ en:
   notice_issues_panel_truncated: "The IssuesPanel was truncated because it exceeds the maximum number of items that can be displayed (%{max})"
   notice_not_authorized_to_change_this_issue: "You are not authorized to change this issue."
   notice_failed_to_move_issue: "Failed to move issue."
+  field_issues_num_per_row: "Issues num per row"
 
   project_module_issues_panel: "Issues Panel"
 

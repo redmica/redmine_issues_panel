@@ -50,6 +50,15 @@ class IssuesPanelController < ApplicationController
   def retrieve_issue_panel(params={})
     @issues_panel = Redmine::Helpers::IssuesPanel.new(params)
     retrieve_query
+    # retrieve optional query filter in session
+    session_key = IssueQuery.name.underscore.to_sym
+    if session[session_key]
+      if params[:set_filter] && params[:query] && params[:query][:issues_num_per_row]
+        session[session_key][:issues_num_per_row] = @query.issues_num_per_row
+      elsif params[:query_id].blank? && session[session_key][:issues_num_per_row]
+        @query.issues_num_per_row = session[session_key][:issues_num_per_row]
+      end
+    end
     @issues_panel.query = @query
   end
 end
