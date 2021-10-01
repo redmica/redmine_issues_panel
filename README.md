@@ -20,6 +20,12 @@ This is a plugin for Redmine to display issues by statuses and change it's statu
 $ git clone https://github.com/redmica/redmine_issues_panel.git /path/to/redmine/plugins/redmine_issues_panel
 ```
 
+## How to activate the Issues Panel
+
+#### Check the 'Issues Panel' checkbox on the Project->Settings->Modules and save it.
+
+![How to activate the Issues Panel](images/how_to_activate.png?raw=true "Check the Issues Panel checkbox on the Project->Settings->Modules")
+
 ## Test
 
 ```
