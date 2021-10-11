@@ -14,7 +14,7 @@
     $('#issue-card-receiver-<%= group_css %>-<%= @issue_card.status_id %>').html('<%= @issues_panel.render_issue_cards(issues_in_group_by_status[@issue_card.status], @issue_card.status, group_value) %>');
   <% end %>
   // restore background-color
-  $('#issue-<%= @issue_card.id %>').addClass('context-menu-selection cm-last', 500);
+  contextMenuAddSelection($('#issue-<%= @issue_card.id %>'));
   loadCardFunctions();
   loadDraggableSettings();
 <% else %>
