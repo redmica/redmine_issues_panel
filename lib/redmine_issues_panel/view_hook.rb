@@ -1,4 +1,4 @@
-module IssuesPanel
+module RedmineIssuesPanel
   class ViewHook < Redmine::Hook::ViewListener
     def view_layouts_base_html_head(context={})
       query = context[:controller].instance_variable_get(:'@query')
