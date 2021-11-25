@@ -1,6 +1,6 @@
-require_dependency 'issue_query'
+require 'issue_query'
 
-module IssuesPanel
+module RedmineIssuesPanel
   module IssueQueryPatch
     def self.included(base)
       base.send(:prepend, InstanceMethods)
@@ -31,6 +31,4 @@ module IssuesPanel
   end
 end
 
-Rails.configuration.to_prepare do
-  IssueQuery.include IssuesPanel::IssueQueryPatch
-end
+IssueQuery.include RedmineIssuesPanel::IssueQueryPatch

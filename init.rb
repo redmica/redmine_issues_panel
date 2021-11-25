@@ -1,7 +1,6 @@
-require 'redmine'
-require 'queries_controller_patch'
-require 'view_hook'
-require 'issue_query_patch'
+require File.expand_path('../lib/redmine_issues_panel/queries_controller_patch', __FILE__)
+require File.expand_path('../lib/redmine_issues_panel/view_hook', __FILE__)
+require File.expand_path('../lib/redmine_issues_panel/issue_query_patch', __FILE__)
 
 Redmine::Plugin.register :redmine_issues_panel do
   name 'Redmine Issues Panel plugin'

@@ -1,6 +1,6 @@
-require_dependency 'queries_controller'
+require 'queries_controller'
 
-module IssuesPanel
+module RedmineIssuesPanel
   module QueriesControllerPatch
     def self.included(base)
       #base.send(:include, InstanceMethods)
@@ -26,4 +26,4 @@ module IssuesPanel
   end
 end
 
-QueriesController.send(:include, IssuesPanel::QueriesControllerPatch) unless QueriesController.included_modules.include? IssuesPanel::QueriesControllerPatch
+QueriesController.send(:include, RedmineIssuesPanel::QueriesControllerPatch) unless QueriesController.included_modules.include? RedmineIssuesPanel::QueriesControllerPatch
