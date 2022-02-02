@@ -140,7 +140,7 @@ td > .issue-cards > .add-issue-card:hover {
 }
 
 .issue-card-form {
-  padding: 5:px;
+  padding: 5px;
 }
 .issue-card-form > #all_attributes > .splitcontentleft {
   flex: none;
