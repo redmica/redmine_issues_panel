@@ -157,7 +157,7 @@ module Redmine
               render_column_content(column, issue)
             end.join.html_safe +
             view.content_tag('div',
-              view.watcher_link(issue, User.current),
+              view.watcher_link(issue.becomes(Issue), User.current),
               :class => 'footer clear').html_safe, 
             :class => "card-content"),
           :id => "issue-#{issue.id}",
