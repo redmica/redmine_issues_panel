@@ -35,6 +35,22 @@ module Redmine
         else
           statuses = IssueStatus.all.sorted
         end
+        if filterd_trackers = @query.filters["tracker_id"]
+          operator = filterd_trackers[:operator].to_s
+          values = filterd_trackers[:values].reject(&:blank?)
+          status_ids = case operator
+                       when "="
+                         Tracker.where(id: values)
+                       when "!"
+                         Tracker.where.not(id: values)
+                       else
+                         []
+                       end.map { |t| t.issue_status_ids }.flatten.uniq
+          # Filter statuses if statuses can be retrieved from the workflow configured in the tracker.
+          if status_ids.any?
+            statuses = statuses.where(id: status_ids)
+          end
+        end
         if filterd_statuses = @query.filters["status_id"]
           operator = filterd_statuses[:operator].to_s
           values = filterd_statuses[:values].reject(&:blank?)
