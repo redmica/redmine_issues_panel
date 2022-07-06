@@ -36,8 +36,8 @@ class IssueCardTest < ActiveSupport::TestCase
     assert_equal 2, issue_card.project_id
 
     assert_equal 4, issue_card.category_id
-    issue_card.move!({ :group_key => 'category_id', :group_value => 2 })
-    assert_equal 2, issue_card.category_id
+    issue_card.move!({ :group_key => 'category_id', :group_value => 3 })
+    assert_equal 3, issue_card.category_id
 
     assert_nil issue_card.assigned_to_id
     issue_card.move!({ :group_key => 'assigned_to_id', :group_value => 2 })

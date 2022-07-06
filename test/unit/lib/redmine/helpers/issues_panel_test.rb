@@ -86,6 +86,29 @@ class Redmine::Helpers::IssuesPanelHelperTest < Redmine::HelperTest
     assert_equal IssueStatus.all.sorted.where(:is_closed => false), issues_panel.panel_statuses
   end
 
+  def test_panel_statuses_with_include_tracker_filter
+    WorkflowTransition.where(:tracker_id => [1, 2]).delete_all
+    WorkflowTransition.create!(:role_id => 1, :tracker_id => 1, :old_status_id => 0, :new_status_id => 1)
+    WorkflowTransition.create!(:role_id => 1, :tracker_id => 2, :old_status_id => 0, :new_status_id => 5)
+    issues_panel = Redmine::Helpers::IssuesPanel.new()
+    query = IssueQuery.new()
+    query.filters = {'tracker_id' => {:operator => "=", :values => [1, 2]}}
+    issues_panel.query = query
+
+    assert_equal IssueStatus.all.sorted.where(id: [0, 1, 5]), issues_panel.panel_statuses
+  end
+
+  def test_panel_statuses_with_exclude_tracker_filter
+    WorkflowTransition.where(:tracker_id => 3).delete_all
+    WorkflowTransition.create!(:role_id => 1, :tracker_id => 3, :old_status_id => 1, :new_status_id => 2)
+    issues_panel = Redmine::Helpers::IssuesPanel.new()
+    query = IssueQuery.new()
+    query.filters = {'tracker_id' => {:operator => "!", :values => [1, 2]}}
+    issues_panel.query = query
+
+    assert_equal IssueStatus.all.sorted.where(:id => [1, 2]), issues_panel.panel_statuses
+  end
+
   def test_issues
     issues_limit = 3
     issues_panel = Redmine::Helpers::IssuesPanel.new({:issues_limit => issues_limit})
