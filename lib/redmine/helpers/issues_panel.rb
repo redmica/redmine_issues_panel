@@ -145,7 +145,8 @@ module Redmine
         when :author
           value = view.avatar(issue.author, :size => "13") + " " + view.link_to_user(issue.author)
         when :assigned_to, :last_updated_by
-          value = issue.send(column.name) ? view.avatar(issue.send(column.name), :size => "13") + " " + view.link_to_user(issue.send(column.name)) : "-"
+          user = issue.send(column.name)
+          value = user ? view.avatar(user, :size => "13") + " " + view.link_to_user(user) : "-"
         when :due_date
           value = view.issue_due_date_details(issue) || ''
         else
