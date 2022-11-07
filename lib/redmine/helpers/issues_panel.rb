@@ -141,12 +141,11 @@ module Redmine
         return '' if column.name == :id || column.name == :status || column == @query.group_by_column
         caption = "<strong>#{column.caption}: </strong>"
         value = +''
-
         case column.name
         when :author
           value = view.avatar(issue.author, :size => "13") + " " + view.link_to_user(issue.author)
-        when :assigned_to
-          value = issue.assigned_to ? view.assignee_avatar(issue.assigned_to, :size => "13") + " " + view.link_to_user(issue.assigned_to) : "-"
+        when :assigned_to, :last_updated_by
+          value = issue.send(column.name) ? view.avatar(issue.send(column.name), :size => "13") + " " + view.link_to_user(issue.send(column.name)) : "-"
         when :due_date
           value = view.issue_due_date_details(issue) || ''
         else
