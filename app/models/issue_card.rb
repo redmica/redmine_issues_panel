@@ -1,4 +1,5 @@
 class IssueCard < Issue
+  self.inheritance_column = :_nonexistant_column_to_bypass_sti
   validate do
     (@move_attributes.keys - self.changes_to_save.keys).each do |attr|
       self.errors.add attr, l('activerecord.errors.messages.can_t_be_changed')
