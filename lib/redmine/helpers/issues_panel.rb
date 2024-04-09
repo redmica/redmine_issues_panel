@@ -161,6 +161,7 @@ module Redmine
 
       def render_card_content(issue)
         issue = issue.becomes(IssueCard)
+        description_button = issue.description.present? ? view.link_to(l(:field_description), '#', :title => l(:field_description), :class => 'icon-only icon-document show-issue-description', :data => { :issue_id => issue.id }) : ''
         view.content_tag('div',
           view.content_tag('div',
             view.content_tag('input', nil, :type => 'checkbox', :name => 'ids[]', :value => issue.id, :style => 'display:none;', :class => 'toggle-selection').html_safe +
@@ -173,6 +174,7 @@ module Redmine
               render_column_content(column, issue)
             end.join.html_safe +
             view.content_tag('div',
+              description_button.html_safe +
               view.watcher_link(issue.becomes(Issue), User.current),
               :class => 'footer clear').html_safe, 
             :class => "card-content"),

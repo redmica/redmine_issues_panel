@@ -1,0 +1,8 @@
+<% if flash[:error].present? %>
+  alert('<%= raw(escape_javascript(flash[:error])) %>');
+<% else %>
+  <% if @issue_card.description.present? %>
+    $('#issue_panel_issue_description #description_content').html('<%= escape_javascript(textilizable(@issue_card, :description, :attachments => @issue_card.attachments)) %>');
+    $('#issue_panel_issue_description').show();
+  <% end %>
+<% end %>

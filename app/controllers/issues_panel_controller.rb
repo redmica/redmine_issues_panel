@@ -1,5 +1,6 @@
 class IssuesPanelController < ApplicationController
-  before_action :find_optional_project
+  before_action :find_optional_project, :except => [:show_issue_description]
+  before_action :find_issue_card, :only => [:show_issue_description, :move_issue_card]
 
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
 
@@ -14,17 +15,15 @@ class IssuesPanelController < ApplicationController
     retrieve_issue_panel(params)
   end
 
-  def move_issue_card
-    @issue_card = IssueCard.find(params[:id])
-    raise Unauthorized unless @issue_card.visible?
-    @issue_card.init_journal(User.current)
-    @issue_card.move!(params)
+  def show_issue_description
+    render :layout => false
+  end
 
-  rescue ActiveRecord::RecordNotFound
-    @issue_card = IssueCard.new
-    flash.now[:error] = l(:error_issue_not_found_in_project)
-  rescue Unauthorized
-    flash.now[:error] = l(:notice_not_authorized_to_change_this_issue)
+  def move_issue_card
+    if flash[:error].nil?
+      @issue_card.init_journal(User.current)
+      @issue_card.move!(params)
+    end
   rescue Exception => e
     flash.now[:error] = e.message
   ensure
@@ -46,6 +45,16 @@ class IssuesPanelController < ApplicationController
   end
 
   private
+
+  def find_issue_card
+    @issue_card = IssueCard.find(params[:id])
+    raise Unauthorized unless @issue_card.visible?
+  rescue ActiveRecord::RecordNotFound
+    @issue_card = IssueCard.new
+    flash.now[:error] = l(:error_issue_not_found_in_project)
+  rescue Unauthorized
+    flash.now[:error] = l(:notice_not_authorized_to_change_this_issue)
+  end
 
   def retrieve_issue_panel(params={})
     @issues_panel = Redmine::Helpers::IssuesPanel.new(params)
