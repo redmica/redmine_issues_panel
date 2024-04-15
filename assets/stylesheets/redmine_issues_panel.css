@@ -145,9 +145,9 @@ div#issue_panel_issue_description div#description_content {
   float: right;
 }
 .card-content .footer {
-  padding-top: 4px;
+  padding-top: 6px;
 }
-.card-content .footer a.icon-fav,a.icon-fav-off {
+.card-content .footer a {
   float: right;
 }
 .card-content .footer a.show-issue-description {
