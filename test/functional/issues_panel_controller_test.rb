@@ -163,4 +163,31 @@ class IssuesPanelControllerTest < ActionController::TestCase
     assert_response :success
     assert_modal_issue_card
   end
+
+  def test_show_description
+    issue = Issue.generate!(:description => 'Issue Description', :author => User.current)
+    get :show_issue_description, :xhr => true, :params => {
+      :id => issue.id
+    }
+    assert_response :success
+    assert_match "$('#issue_panel_issue_description #description_content').html('<p>Issue Description<\\/p>')", response.body
+    assert_match "$('#issue_panel_issue_description').show();", response.body
+  end
+
+  def test_show_description_but_record_not_found
+    put :show_issue_description, :xhr => true, :params => {
+      :id => 99999
+    }
+    assert_response :success
+    assert_match "alert('#{I18n.t(:error_issue_not_found_in_project)}')", response.body
+  end
+
+  def test_show_issue_description_but_unauthorized
+    IssueCard.any_instance.stubs(:visible?).returns(false)
+    put :show_issue_description, :xhr => true, :params => {
+      :id => 1
+    }
+    assert_response :success
+    assert_match "alert('#{I18n.t(:notice_not_authorized_to_change_this_issue)}')", response.body
+  end
 end

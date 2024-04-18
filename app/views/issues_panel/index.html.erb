@@ -33,6 +33,11 @@
 
 <%= context_menu %>
 
+<div id="issue_panel_issue_description" class="wiki">
+  <h4><%= l(:field_description) %></h4>
+  <div id="description_content"></div>
+</div>
+
 <div id="new-issue-card-modal" style="display:none;"></div>
 
 <%= javascript_tag do %>
@@ -56,7 +61,7 @@ function loadDraggableSettings() {
       opacity: 0.9,
       zIndex: 10,
       start: function() { $(this).css({ transform: 'rotate(10deg)', zIndex: 10 }); },
-      drag: function() { $('.hascontextmenu').removeClass('context-menu-selection cm-last');contextMenuHide(); },
+      drag: function() { $('.hascontextmenu').removeClass('context-menu-selection cm-last');contextMenuHide();hideIssueDescription(); },
       stop: function() { $(this).css({ transform: 'rotate(0deg)', zIndex: 10 }); }
     });
   });
@@ -93,6 +98,20 @@ function loadDroppableSetting() {
   });
 }
 function loadCardFunctions(){
+  $('.show-issue-description').click(function(event) {
+    // clear context menu selection
+    contextMenuUnselectAll();
+    contextMenuHide();
+    var target = $(event.target);
+    var tr = target.closest('.hascontextmenu').first();
+    contextMenuAddSelection(tr);
+
+    var issue_id = $(this).attr('data-issue-id')
+    var mouse_x = event.pageX;
+    var mouse_y = event.pageY;
+    showIssueDescription(issue_id, mouse_x, mouse_y);
+    return false;
+  });
   $('.link-issue').dblclick(function() {
     var issue_id = $(this).attr('data-issue-id');
     window.location.href='<%= issues_path %>/' + issue_id;
@@ -115,9 +134,28 @@ function loadCardFunctions(){
     });
   });
 }
+function showIssueDescription(issue_id, left, top) {
+  $('#issue_panel_issue_description').css('left', (left + 'px'));
+  $('#issue_panel_issue_description').css('top', (top + 'px'));
+  $.ajax({
+    url: '<%= show_issue_description_path(:format => 'js') %>',
+    data: { 'id': issue_id }
+  });
+}
+function hideIssueDescription() {
+  $('#issue_panel_issue_description #description_content').html('');
+  $('#issue_panel_issue_description').hide();
+}
 $(document).ready(function(){
   loadDraggableSettings();
   loadDroppableSetting();
   loadCardFunctions();
+  hideIssueDescription();
+});
+$(document).on("click", function() {
+  hideIssueDescription();
+});
+$(document).on("contextmenu", function() {
+  hideIssueDescription();
 });
 <% end %>
