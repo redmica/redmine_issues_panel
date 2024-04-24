@@ -152,10 +152,14 @@ $(document).ready(function(){
   loadCardFunctions();
   hideIssueDescription();
 });
-$(document).on("click", function() {
-  hideIssueDescription();
+$(document).on("click", function(e) {
+  if (!$(e.target).closest('#issue_panel_issue_description').length) {
+    hideIssueDescription();
+  }
 });
-$(document).on("contextmenu", function() {
-  hideIssueDescription();
+$(document).on("contextmenu", function(e) {
+  if (!$(e.target).closest('#issue_panel_issue_description').length) {
+    hideIssueDescription();
+  }
 });
 <% end %>
