@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - redmine-repository: 'redmica/redmica'
+            redmine-version: 'stable-2.4'
+            ruby-version: '3.2'
+          - redmine-repository: 'redmica/redmica'
+            redmine-version: 'master'
+            ruby-version: '3.2'
+          - redmine-repository: 'redmine/redmine'
+            redmine-version: 'master'
+            ruby-version: '3.2'
+
+    steps:
+    - uses: hidakatsuya/action-setup-redmine@v1
+      with:
+        repository: ${{ matrix.redmine-repository }}
+        version: ${{ matrix.redmine-version }}
+        ruby-version: ${{ matrix.ruby-version }}
+        database: 'postgres:14'
+
+    - uses: actions/checkout@v4
+      with:
+        path: plugins/redmine_issues_panel
+
+    - run: bin/rails redmine:plugins:test NAME=redmine_issues_panel
