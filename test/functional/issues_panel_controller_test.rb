@@ -170,8 +170,15 @@ class IssuesPanelControllerTest < ActionController::TestCase
       :id => issue.id
     }
     assert_response :success
-    assert_match "$('#issue_panel_issue_description #description_content').html('<p>Issue Description<\\/p>')", response.body
-    assert_match "$('#issue_panel_issue_description').show();", response.body
+    assert_equal 'application/json', response.media_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_select(Nokogiri::HTML(data['description']), "div.issue") do
+      assert_select 'div.subject', issue.subject
+      assert_select 'div.description' do
+        assert_select 'p strong', I18n.t(:field_description)
+        assert_select 'div.wiki', issue.description
+      end
+    end
   end
 
   def test_show_description_but_record_not_found
@@ -179,7 +186,9 @@ class IssuesPanelControllerTest < ActionController::TestCase
       :id => 99999
     }
     assert_response :success
-    assert_match "alert('#{I18n.t(:error_issue_not_found_in_project)}')", response.body
+    assert_equal 'application/json', response.media_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_equal I18n.t(:error_issue_not_found_in_project), data['error_message']
   end
 
   def test_show_issue_description_but_unauthorized
@@ -187,7 +196,10 @@ class IssuesPanelControllerTest < ActionController::TestCase
     put :show_issue_description, :xhr => true, :params => {
       :id => 1
     }
+
     assert_response :success
-    assert_match "alert('#{I18n.t(:notice_not_authorized_to_change_this_issue)}')", response.body
+    assert_equal 'application/json', response.media_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_equal I18n.t(:notice_not_authorized_to_change_this_issue), data['error_message']
   end
 end

@@ -23,25 +23,19 @@ table.issues-panel td {
 }
 
 div#issue_panel_issue_description {
-  background-color: #ffffdd;
+  background-color: #ffffee;
+  padding-top: 6px;
   padding-left: 6px;
   padding-right: 6px;
   position: absolute;
   z-index: 1000;
-  min-width: 300px;
-  max-width: 600px;
-  border: 1px solid #507AAA;
-  display: none;
-}
-
-div#issue_panel_issue_description img {
-  min-width: 260px!important;
-  max-width: 520px!important;
-}
-
-div#issue_panel_issue_description div#description_content {
+  width: 500px;
   max-height: 300px;
-  overflow: scroll;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: none;
 }
 
 .issue-card-receiver {

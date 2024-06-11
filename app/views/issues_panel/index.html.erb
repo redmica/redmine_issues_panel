@@ -33,10 +33,7 @@
 
 <%= context_menu %>
 
-<div id="issue_panel_issue_description" class="wiki">
-  <h4><%= l(:field_description) %></h4>
-  <div id="description_content"></div>
-</div>
+<div id="issue_panel_issue_description"></div>
 
 <div id="new-issue-card-modal" style="display:none;"></div>
 
@@ -97,20 +94,60 @@ function loadDroppableSetting() {
     }
   });
 }
-function loadCardFunctions(){
-  $('.show-issue-description').click(function(event) {
-    // clear context menu selection
-    contextMenuUnselectAll();
-    contextMenuHide();
-    var target = $(event.target);
-    var tr = target.closest('.hascontextmenu').first();
-    contextMenuAddSelection(tr);
+function showIssueDescription(issue_id, element) {
+  var mouse_x = element.offset().left;
+  var mouse_y = element.offset().top;
+  var description_element = $('#issue_panel_issue_description');
 
-    var issue_id = $(this).attr('data-issue-id')
-    var mouse_x = event.pageX;
-    var mouse_y = event.pageY;
-    showIssueDescription(issue_id, mouse_x, mouse_y);
-    return false;
+  description_element.css('left', (mouse_x + 'px'));
+  description_element.css('top', (mouse_y + 'px'));
+  description_element.html('');
+
+  $.ajax({
+    url: '<%= show_issue_description_path(:format => 'js') %>',
+    data: { 'id': issue_id },
+    success: function(data) {
+      if (data['description'] !== undefined && data['description'] != '') {
+        description_element.html(data['description']);
+        var description_width = description_element.width();
+        var description_height = description_element.height();
+
+        // modify position if the description element is out of window
+        var render_x = mouse_x - 90;
+        var render_y = mouse_y - description_height - 16;
+
+        var window_width = window_size().width;
+        if ((render_x + description_width) > window_width) {
+          render_x = window_width - description_width - 18;
+        }
+        if (render_y < $(window).scrollTop()) {
+          render_y = mouse_y + 18;
+        }
+        if (render_x <= 0) { render_x = 1; }
+        if (render_y <= 0) { render_y = 1; }
+
+        // show description element
+        description_element.css('left', (render_x + 'px'));
+        description_element.css('top', (render_y + 'px'));
+        description_element.show();
+      } else {
+        if (data['error_message'] !== undefined && data['error_message'] != '') { alert(data['error_message']); }
+      }
+    }
+  });
+}
+function hideIssueDescription() {
+  $('#issue_panel_issue_description #description_content').html('');
+  $('#issue_panel_issue_description').hide();
+}
+function loadCardFunctions(){
+$('.issue-card a.issue').mouseover(function(event) {
+    var element = $(this);
+    var issue_id = element.closest('.issue-card').data('issue-id')
+    showIssueDescription(issue_id, element);
+  });
+  $('.issue-card a.issue').mouseout(function() {
+    hideIssueDescription();
   });
   $('.link-issue').dblclick(function() {
     var issue_id = $(this).attr('data-issue-id');
@@ -133,18 +170,6 @@ function loadCardFunctions(){
       }
     });
   });
-}
-function showIssueDescription(issue_id, left, top) {
-  $('#issue_panel_issue_description').css('left', (left + 'px'));
-  $('#issue_panel_issue_description').css('top', (top + 'px'));
-  $.ajax({
-    url: '<%= show_issue_description_path(:format => 'js') %>',
-    data: { 'id': issue_id }
-  });
-}
-function hideIssueDescription() {
-  $('#issue_panel_issue_description #description_content').html('');
-  $('#issue_panel_issue_description').hide();
 }
 $(document).ready(function(){
   loadDraggableSettings();

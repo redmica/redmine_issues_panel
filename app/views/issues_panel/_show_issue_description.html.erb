@@ -1,0 +1,22 @@
+<div class="<%= issue_card.css_classes %> details">
+  <div class="gravatar-with-child">
+    <%= author_avatar(issue_card.author, :size => "50") %>
+    <%= assignee_avatar(issue_card.assigned_to, :size => "22", :class => "gravatar-child") if issue_card.assigned_to %>
+  </div>
+  <div class="subject">
+    <%= render_issue_subject_with_tree(issue_card) %>
+  </div>
+  <p class="author">
+    <%= authoring issue_card.created_on, issue_card.author %>.
+    <% if issue_card.created_on != issue_card.updated_on %>
+    <%= l(:label_updated_time, time_tag(issue_card.updated_on)).html_safe %>.
+  <% end %>
+  </p>
+  <hr />
+  <div class="description">
+    <p><strong><%=l(:field_description)%></strong></p>
+    <div class="wiki">
+      <%= textilizable(issue_card.description.truncate(200)) %>
+    </div>
+  </div>
+</div>
