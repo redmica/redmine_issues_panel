@@ -9,8 +9,8 @@
   <p class="author">
     <%= authoring issue_card.created_on, issue_card.author %>.
     <% if issue_card.created_on != issue_card.updated_on %>
-    <%= l(:label_updated_time, time_tag(issue_card.updated_on)).html_safe %>.
-  <% end %>
+      <%= l(:label_updated_time, time_tag(issue_card.updated_on)).html_safe %>.
+    <% end %>
   </p>
   <hr />
   <div class="description">

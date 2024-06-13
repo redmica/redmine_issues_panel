@@ -141,7 +141,7 @@ function hideIssueDescription() {
   $('#issue_panel_issue_description').hide();
 }
 function loadCardFunctions(){
-$('.issue-card a.issue').mouseover(function(event) {
+  $('.issue-card a.issue').mouseover(function(event) {
     var element = $(this);
     var issue_id = element.closest('.issue-card').data('issue-id')
     showIssueDescription(issue_id, element);
