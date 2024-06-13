@@ -16,7 +16,11 @@ class IssuesPanelController < ApplicationController
   end
 
   def show_issue_description
-    render :layout => false
+    if flash[:error].nil?
+      render json: { description: render_to_string(partial: 'issues_panel/show_issue_description', locals: { issue_card: @issue_card }) }
+    else
+      render json: { error_message: flash[:error] }
+    end
   end
 
   def move_issue_card

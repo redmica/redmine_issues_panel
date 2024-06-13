@@ -161,22 +161,20 @@ module Redmine
 
       def render_card_content(issue)
         issue = issue.becomes(IssueCard)
-        description_button = issue.description.present? ? view.link_to(l(:field_description), '#', :title => l(:field_description), :class => 'icon-only icon-document show-issue-description', :data => { :issue_id => issue.id }) : ''
         view.content_tag('div',
           view.content_tag('div',
             view.content_tag('input', nil, :type => 'checkbox', :name => 'ids[]', :value => issue.id, :style => 'display:none;', :class => 'toggle-selection').html_safe +
             view.content_tag('div',
               view.link_to_context_menu.html_safe +
-              view.link_to_issue(issue, :tracker => true, :subject => false).html_safe,
+              view.link_to("#{issue.tracker} ##{issue.id}", issue_url(issue, :only_path => true), :class => issue.css_classes).html_safe,
               :class => 'header clear'
             ).html_safe +
             @query.inline_columns.collect do |column|
               render_column_content(column, issue)
             end.join.html_safe +
             view.content_tag('div',
-              description_button.html_safe +
               view.watcher_link(issue.becomes(Issue), User.current),
-              :class => 'footer clear').html_safe, 
+              :class => 'footer clear').html_safe,
             :class => "card-content"),
           :id => "issue-#{issue.id}",
           :class => "hascontextmenu #{issue.priority.try(:css_classes)} #{issue.overdue? ? 'overdue' : ''} #{issue.closed? ? 'closed' : ''}"
