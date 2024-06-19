@@ -22,19 +22,77 @@ table.issues-panel td {
   text-align: left;
 }
 
-div#issue_panel_issue_description {
+#issue_panel_issue_description {
   background-color: #ffffee;
-  padding-top: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding: 3px;
   position: absolute;
   z-index: 1000;
-  width: 500px;
-  max-height: 300px;
-  overflow: hidden;
+  width: 380px;
   border: 1px solid #ddd;
   border-radius: 3px;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+#issue_panel_issue_description .issue {
+  background-color: #ffffee;
+  border: none;
+  padding: 3px;
+  margin: 3px;
+}
+
+#issue_panel_issue_description .issue .subject {
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+#issue_panel_issue_description .issue .subject a {
+  padding-left: 0px;
+  margin-left: 0px;
+}
+
+#issue_panel_issue_description .issue .description .wiki * {
+  font-size: 0.9em;
+  font-weight: normal;
+  border: none;
+  margin: 2px;
+  font-style: normal;
+}
+
+#issue_panel_issue_description .issue .description .wiki blockquote {
+  padding-left: 0px;
+}
+
+#issue_panel_issue_description .issue .description .wiki ol,
+#issue_panel_issue_description .issue .description .wiki ul {
+  padding-inline-start: 18px;
+  font-size: 1em;
+}
+
+#issue_panel_issue_description .issue .description .wiki pre,
+#issue_panel_issue_description .issue .description .wiki pre code {
+  padding: 0px;
+  margin: 0px;
+  background: transparent;
+  white-space: pre-wrap;
+  hyphens: auto;
+}
+
+#issue_panel_issue_description .issue .description .wiki pre code span {
+  margin: 0px;
+  color: inherit;
+  background: transparent;
+}
+
+#issue_panel_issue_description .issue .description .wiki table,
+#issue_panel_issue_description .issue .description .wiki tr,
+#issue_panel_issue_description .issue .description .wiki td {
+  padding: 2px;
+  font-size: 1em;
+}
+
+#issue_panel_issue_description .issue .description .wiki p img,
+#issue_panel_issue_description .issue .description .wiki p img+br {
   display: none;
 }
 

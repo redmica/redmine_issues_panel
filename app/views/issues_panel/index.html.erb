@@ -137,14 +137,23 @@ function showIssueDescription(issue_element, description_element) {
   });
 }
 function hideIssueDescription() {
-  $('#issue_panel_issue_description #description_content').html('');
+  $('#issue_panel_issue_description').html('');
   $('#issue_panel_issue_description').hide();
 }
 function loadCardFunctions(){
-  $('.issue-card a.issue').mouseover(function(event) {
+  var timer;
+  $('.issue-card .card-content .subject a').mouseover(function(event) {
+    clearTimeout(timer);
     showIssueDescription($(this), $('#issue_panel_issue_description'));
   });
-  $('.issue-card a.issue').mouseout(function() {
+  $('.issue-card .card-content .subject a').mouseout(function() {
+    timer = setTimeout(function() {
+      if (!$('#issue_panel_issue_description').is(':hover')) {
+        hideIssueDescription();
+      }
+    }, 400);
+  });
+  $('#issue_panel_issue_description').mouseleave(function() {
     hideIssueDescription();
   });
   $('.link-issue').dblclick(function() {
