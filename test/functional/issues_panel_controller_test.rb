@@ -173,9 +173,8 @@ class IssuesPanelControllerTest < ActionController::TestCase
     assert_equal 'application/json', response.media_type
     data = ActiveSupport::JSON.decode(response.body)
     assert_select(Nokogiri::HTML(data['description']), "div.issue") do
-      assert_select 'div.subject', issue.subject
+      assert_select 'div.subject', "##{issue.id}: #{issue.subject}"
       assert_select 'div.description' do
-        assert_select 'p strong', I18n.t(:field_description)
         assert_select 'div.wiki', issue.description
       end
     end
