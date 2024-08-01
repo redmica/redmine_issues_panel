@@ -12,14 +12,14 @@ jobs:
       matrix:
         include:
           - redmine-repository: 'redmica/redmica'
-            redmine-version: 'stable-2.4'
-            ruby-version: '3.2'
+            redmine-version: 'stable-3.0'
+            ruby-version: '3.3'
           - redmine-repository: 'redmica/redmica'
             redmine-version: 'master'
-            ruby-version: '3.2'
+            ruby-version: '3.3'
           - redmine-repository: 'redmine/redmine'
             redmine-version: 'master'
-            ruby-version: '3.2'
+            ruby-version: '3.3'
 
     steps:
     - uses: hidakatsuya/action-setup-redmine@v1
