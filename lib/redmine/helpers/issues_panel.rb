@@ -6,7 +6,6 @@ module Redmine
       include Rails.application.routes.url_helpers
       include Redmine::I18n
       include IssuesPanelHelper
-      include VersionsHelper
       include ActionView::Helpers::UrlHelper
 
       attr_reader :truncated, :issues_limit
@@ -220,8 +219,7 @@ module Redmine
                     version = Version.find(group_value)
                     # バージョン詳細画面(views/versions/show.html.erb)で「新しいチケット」のリンクを表示する基準
                     # enable link to new issue?
-                    if link_to_new_issue(version, version.project)
-                    #if version.open? && User.current.allowed_to?(:add_issues, version.project)
+                    if version.open? && User.current.allowed_to?(:add_issues, version.project)
                       new_issue_params.merge!({ :project_id => version.project_id })
                     else
                       # do not display + button
