@@ -60,7 +60,7 @@
               <%= f.select :category_id, (@issue_card.project.issue_categories.collect {|c| [c.name, c.id]}),
                            {:include_blank => true, :required => @issue_card.required_attribute?('category_id')},
                            :onchange => "updateIssueFrom('#{escape_javascript new_issue_card_path}', this)" %>
-              <%= link_to(l(:label_issue_category_new),
+              <%= link_to(sprite_icon('add',l(:label_issue_category_new)),
                           new_project_issue_category_path(@issue_card.project),
                           :remote => true,
                           :method => 'get',
@@ -75,7 +75,7 @@
             <p>
               <%= f.select :fixed_version_id, version_options_for_select(@issue_card.assignable_versions, @issue_card.fixed_version),
                            :include_blank => true, :required => @issue_card.required_attribute?('fixed_version_id') %>
-              <%= link_to(l(:label_version_new),
+              <%= link_to(sprite_icon('add', l(:label_version_new)),
                           new_project_version_path(@issue_card.project),
                           :remote => true,
                           :method => 'get',

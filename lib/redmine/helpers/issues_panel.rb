@@ -245,7 +245,7 @@ module Redmine
             end
             if new_issue_params.any?
               issue_cards << view.content_tag('div',
-                               view.link_to(l(:label_issue_new), '', :class => 'icon icon-add new-issue'),
+                               view.link_to(view.sprite_icon('add', l(:label_issue_new)), '', :class => 'icon icon-add new-issue'),
                                :class => "issue-card add-issue-card",
                                :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => new_issue_params, :back_url => _project_issues_panel_path(@query.project) }) }
                              )
@@ -275,8 +275,8 @@ module Redmine
                            :id => "issues-count-on-status-#{s.id}",
                            :class => 'badge badge-count count').html_safe +
                           (new_issue && new_issue.new_statuses_allowed_to(User.current).include?(s) ?
-                            view.link_to('', '',
-                              :class => 'icon icon-add new-issue add-issue-card',
+                            view.link_to(view.sprite_icon('add', ''), '',
+                              :class => 'icon-only icon-add new-issue add-issue-card',
                               :data => { :url => view.new_issue_card_path({ :project_id => @query.project.try(:id), :issue => { :status_id => s.id }, :back_url => _project_issues_panel_path(@query.project) }) }
                             ) : '').html_safe
                        )}.join.html_safe
