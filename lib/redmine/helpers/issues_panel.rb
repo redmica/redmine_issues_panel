@@ -291,7 +291,7 @@ module Redmine
           if self.grouped?
             tbody << view.content_tag('tr',
                        view.content_tag('td',
-                         view.content_tag('span', '&nbsp;'.html_safe, :class => 'expander icon icon-expended', :onclick => 'toggleRowGroup(this);').html_safe +
+                         view.content_tag('span', view.sprite_icon("angle-down"), :class => 'expander icon icon-expanded', :onclick => 'toggleRowGroup(this);').html_safe +
                          view.content_tag('span', group_label, :class => 'name').html_safe +
                          view.content_tag('span', group_count, :class => 'badge badge-count count issues-count-on-group', :id => "issues-count-on-group-#{group_css}").html_safe,
                          :colspan => statuses.count
