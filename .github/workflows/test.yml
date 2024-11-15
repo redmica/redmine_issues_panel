@@ -12,9 +12,6 @@ jobs:
       matrix:
         include:
           - redmine-repository: 'redmica/redmica'
-            redmine-version: 'stable-3.0'
-            ruby-version: '3.3'
-          - redmine-repository: 'redmica/redmica'
             redmine-version: 'master'
             ruby-version: '3.3'
           - redmine-repository: 'redmine/redmine'

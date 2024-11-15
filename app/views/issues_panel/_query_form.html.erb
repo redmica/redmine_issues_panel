@@ -5,7 +5,10 @@
 <div id="query_form_with_buttons" class="hide-when-print">
 <div id="query_form_content">
   <fieldset id="filters" class="collapsible <%= @query.new_record? ? "" : "collapsed" %>">
-    <legend onclick="toggleFieldset(this);" class="icon icon-<%= @query.new_record? ? "expended" : "collapsed" %>"><%= l(:label_filter_plural) %></legend>
+    <legend onclick="toggleFieldset(this);" class="icon icon-<%= @query.new_record? ? "expended" : "collapsed" %>">
+      <%= sprite_icon(@query.new_record? ? "angle-down" : "angle-right") %>
+      <%= l(:label_filter_plural) %>
+    </legend>
     <div style="<%= @query.new_record? ? "" : "display: none;" %>">
       <%= render :partial => 'queries/filters', :locals => {:query => @query} %>
     </div>
@@ -13,7 +16,10 @@
 
   <% if @query.available_columns.any? %>
     <fieldset id="options" class="collapsible collapsed">
-      <legend onclick="toggleFieldset(this);" class="icon icon-collapsed"><%= l(:label_options) %></legend>
+      <legend onclick="toggleFieldset(this);" class="icon icon-collapsed">
+        <%= sprite_icon("angle-right") %>
+        <%= l(:label_options) %>
+      </legend>
         <div class="hidden">
           <% if @query.available_display_types.size > 1 %>
           <div>
@@ -66,18 +72,18 @@
 </div>
 
 <p class="buttons">
-  <%= link_to_function l(:button_apply), '$("#query_form").submit()', :class => 'icon icon-checked' %>
-  <%= link_to l(:button_clear), { :set_filter => 1, :sort => '', :project_id => @project }, :class => 'icon icon-reload'  %>
+  <%= link_to_function sprite_icon('checked', l(:button_apply)), '$("#query_form").submit()', :class => 'icon icon-checked' %>
+  <%= link_to sprite_icon('reload', l(:button_clear)), { :set_filter => 1, :sort => '', :project_id => @project }, :class => 'icon icon-reload'  %>
   <% if @query.new_record? %>
     <% if User.current.allowed_to?(:save_queries, @project, :global => true) %>
-      <%= link_to_function l(:button_save_object, object_name: l(:label_query).downcase),
+      <%= link_to_function sprite_icon('save', l(:button_save_object, object_name: l(:label_query).downcase)),
                            "$('#query_type').prop('disabled',false);$('#query_form').attr('action', '#{ @project ? new_project_query_path(@project) : new_query_path }').submit()",
                            :class => 'icon icon-save' %>
     <% end %>
   <% else %>
     <% if @query.editable_by?(User.current) %>
       <% redirect_params = {:issues_panel => 1} %>
-      <%= link_to l(:button_edit_object, object_name: l(:label_query).downcase), edit_query_path(@query, redirect_params), :class => 'icon icon-edit' %>
+      <%= link_to sprite_icon('edit', l(:button_edit_object, object_name: l(:label_query).downcase)), edit_query_path(@query, redirect_params), :class => 'icon icon-edit' %>
       <%= delete_link query_path(@query, redirect_params), {}, l(:button_delete_object, object_name: l(:label_query).downcase) %>
     <% end %>
   <% end %>
