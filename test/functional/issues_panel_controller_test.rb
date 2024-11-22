@@ -201,4 +201,20 @@ class IssuesPanelControllerTest < ActionController::TestCase
     data = ActiveSupport::JSON.decode(response.body)
     assert_equal I18n.t(:notice_not_authorized_to_change_this_issue), data['error_message']
   end
+
+  def test_show_issue_description_when_description_is_nil
+    issue = Issue.generate!(:description => nil, :author => User.current)
+    get :show_issue_description, :xhr => true, :params => {
+      :id => issue.id
+    }
+    assert_response :success
+    assert_equal 'application/json', response.media_type
+    data = ActiveSupport::JSON.decode(response.body)
+    assert_select(Nokogiri::HTML(data['description']), "div.issue") do
+      assert_select 'div.subject', "##{issue.id}: #{issue.subject}"
+      assert_select 'div.description' do
+        assert_select 'div.wiki', ''
+      end
+    end
+  end
 end
