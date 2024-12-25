@@ -5,22 +5,6 @@ class Redmine::Helpers::IssuesPanelHelperTest < Redmine::HelperTest
   include Rails.application.routes.url_helpers
   include Redmine::I18n
 
-  fixtures :users,
-           :projects,
-           :roles,
-           :members,
-           :member_roles,
-           :enumerations,
-           :issues,
-           :issue_statuses,
-           :issue_relations,
-           :issue_categories,
-           :versions,
-           :trackers,
-           :projects_trackers,
-           :enabled_modules,
-           :workflows
-
   def setup
     User.current = User.find(1)
   end
@@ -118,4 +102,3 @@ class Redmine::Helpers::IssuesPanelHelperTest < Redmine::HelperTest
     assert_equal issues_limit, issues_panel.issues.count
   end
 end
-

@@ -1,8 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssueQueryTest < ActiveSupport::TestCase
-  fixtures :roles, :trackers, :issue_statuses
-
   def test_build_from_params_should_set_issues_num_per_row
     q = IssueQuery.create!(:name => 'issue panel', :options => {})
 
