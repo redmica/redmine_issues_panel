@@ -1,22 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssuesPanelControllerTest < ActionController::TestCase
-  fixtures :users,
-           :projects,
-           :roles,
-           :members,
-           :member_roles,
-           :enumerations,
-           :issues,
-           :issue_statuses,
-           :issue_relations,
-           :issue_categories,
-           :versions,
-           :trackers,
-           :projects_trackers,
-           :enabled_modules,
-           :workflows
-
   def setup
     @request.session[:user_id] = 2
   end
