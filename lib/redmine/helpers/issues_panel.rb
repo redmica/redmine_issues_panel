@@ -149,7 +149,7 @@ module Redmine
         when :due_date
           value = view.issue_due_date_details(issue) || ''
         else
-          value = view.column_content(column, issue) || ''
+          value = view.column_content(column, issue.becomes(Issue)) || ''
         end
         view.content_tag('div',
           view.content_tag('div', caption.html_safe, :class => "caption").html_safe +

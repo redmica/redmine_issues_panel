@@ -203,6 +203,26 @@ table.issues-panel td {
   float: left;
   padding-right: 2px;
 }
+.card-content .watcher_users .caption strong {
+  line-height: 0.9em
+}
+.card-content .watcher_users .value ul {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.card-content .watcher_users .value ul li {
+  display: inline;
+}
+.card-content .watcher_users .value ul li::after {
+  content: ",";
+  margin-left: 2px;
+  margin-right: 4px;
+}
+.card-content .watcher_users .value ul li:last-child::after {
+  content: "";
+}
 .card-content .header .js-contextmenu {
   float: right;
 }
