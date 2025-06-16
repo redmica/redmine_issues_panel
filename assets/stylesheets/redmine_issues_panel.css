@@ -204,7 +204,7 @@ table.issues-panel td {
   padding-right: 2px;
 }
 .card-content .watcher_users .caption strong {
-  line-height: 0.9em
+  line-height: 0.9em;
 }
 .card-content .watcher_users .value ul {
   display: inline;
