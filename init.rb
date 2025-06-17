@@ -7,7 +7,7 @@ Redmine::Plugin.register :redmine_issues_panel do
   author 'Takenori Takaki (Far End Technologies)'
   description 'A plugin for Redmine to display issues by statuses and change it\'s status by DnD.'
   requires_redmine version_or_higher: '6.0'
-  version '1.1.2'
+  version '1.1.3'
   url 'https://github.com/redmica/redmine_issues_panel'
   author_url 'https://hosting.redmine.jp/'
 
