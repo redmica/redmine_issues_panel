@@ -33,4 +33,7 @@ jobs:
       with:
         path: plugins/redmine_issues_panel
 
+    # # Plugins do not work on the redmine/redmine master branch,
+    # so this test combination will be skipped until the issue is fixed.
     - run: bin/rails redmine:plugins:test NAME=redmine_issues_panel
+      if: ${{ !(matrix.redmine-repository == 'redmine/redmine' && matrix.redmine-version == 'master') }}
