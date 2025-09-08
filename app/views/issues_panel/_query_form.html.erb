@@ -45,8 +45,15 @@
             <%= hidden_field_tag 'selected_query_issues_num_per_row', @query.issues_num_per_row %>
             <%= select_tag 'query[issues_num_per_row]', options_for_select([1, 2, 3], @query.issues_num_per_row) %>
           </div>
+          <div>
+            <div class="field"><%= l(:field_enable_manual_ordering) %></div>
+            <label for='query_enable_manual_ordering'>
+              <%= hidden_field_tag 'query[enable_manual_ordering]', '0' %>
+              <%= check_box_tag 'query[enable_manual_ordering]', '1', @query.enable_manual_ordering?, :onchange => 'toggleSortSelection()' %>
+            </label>
+          </div>
           <% if @query.sortable_columns.any? %>
-            <div>
+            <div id="sort">
               <div class="field"><label for='sort'><%= l(:label_sort) %></label></div>
               <div>
                 <% 3.times do |i| %>
@@ -100,7 +107,8 @@ $(function ($) {
     } else {
       $('table#list-definition').hide();
     }
-  })
+  });
+  toggleSortSelection();
 });
 
 <% end %>

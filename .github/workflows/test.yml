@@ -35,4 +35,6 @@ jobs:
       with:
         path: plugins/redmine_issues_panel
 
+    - run: bin/rails redmine:plugins:migrate NAME=redmine_issues_panel RAILS_ENV=test
+
     - run: bin/rails redmine:plugins:test NAME=redmine_issues_panel
