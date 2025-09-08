@@ -63,6 +63,20 @@ function loadDraggableSettings() {
     });
   });
 }
+function moveIssueCard(issue_card, receiver, ordered_issue_ids=[]) {
+  $.ajax({
+    url: '<%= move_issue_card_path(:format => 'js') %>',
+    type: 'put',
+    data: {
+      'id': issue_card.attr('data-issue-id'),
+      <%= @project ? ("'project_id': #{@project.id},").html_safe : '' %>
+      'status_id': receiver.attr('data-status-id'),
+      'group_key': receiver.attr('data-group-key'),
+      'group_value': receiver.attr('data-group-value'),
+      'ordered_issue_ids': ordered_issue_ids
+      }
+  });
+}
 function loadDroppableSetting() {
   $(".issue-card-receiver").droppable({
     accept: ".issue-card",
@@ -78,21 +92,32 @@ function loadDroppableSetting() {
             (typeof(new_group_value) === "undefiend" || org_group_value==new_group_value)) {
           return $(ui.draggable).addClass('drag-revert');
         } else {
-          $.ajax({
-            url: '<%= move_issue_card_path(:format => 'js') %>',
-            type: 'put',
-            data: {
-              'id': ui.draggable.attr('data-issue-id'),
-              <%= @project ? ("'project_id': #{@project.id},").html_safe : '' %>
-              'status_id': $(this).attr('data-status-id'),
-              'group_key': $(this).attr('data-group-key'),
-              'group_value': $(this).attr('data-group-value')
-            }
-          });
+          moveIssueCard(ui.draggable, $(this));
         }
       }
     }
   });
+}
+function loadSortableSetting() {
+  $(".issue-card-receiver").sortable({
+    items: ".issue-card:not(.add-issue-card)",
+    connectWith: '.issue-card-receiver',
+    revert: true,
+    start: function(event, ui) {
+      ui.item.css({ opacity: 0.9 });
+      ui.placeholder.height(ui.item.height());
+    },
+    activate: function() { $('.hascontextmenu').removeClass('context-menu-selection cm-last');contextMenuHide();hideIssueDescription(); },
+    update: function(event, ui) {
+      var current_receiver = ui.item.parents('.issue-card-receiver')[0];
+      if (this !== current_receiver) return; // do nothing if the update event is not fired in the current receiver
+      var ordered_issue_ids = [];
+      $(this).find('.issue-card:not(.add-issue-card)').each(function(_, elem) {
+        ordered_issue_ids.push($(elem).attr('data-issue-id'));
+      });
+      moveIssueCard(ui.item, $(this), ordered_issue_ids);
+    }
+  }).disableSelection();
 }
 function showIssueDescription(issue_element, description_element) {
   var issue_id = issue_element.attr('href').split('/').at(-1)
@@ -179,8 +204,12 @@ function loadCardFunctions(){
   });
 }
 $(document).ready(function(){
+  <% if @query.enable_manual_ordering? %>
+  loadSortableSetting();
+  <% else %>
   loadDraggableSettings();
   loadDroppableSetting();
+  <% end %>
   loadCardFunctions();
   hideIssueDescription();
 });

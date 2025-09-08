@@ -94,7 +94,6 @@ class IssuesPanelControllerTest < ActionController::TestCase
     assert_match "$('#issues-count-on-status-5').html('4')", response.body
     assert_match "$('.issues-count-on-group').html('0');", response.body
     assert_match "$('#issues-count-on-group-').html('4');", response.body
-    assert_match "loadDraggableSettings();", response.body
   end
 
   def test_move_issue_card_but_record_not_found
@@ -103,7 +102,7 @@ class IssuesPanelControllerTest < ActionController::TestCase
     }
     assert_response :success
     assert_match "alert('#{I18n.t(:error_issue_not_found_in_project)}')", response.body
-    assert_match "('#issue-card-').animate( {left: 0, top: 0}, 500 );", response.body
+    assert_match "$('.issue-card-receiver').sortable('cancel');", response.body
   end
 
   def test_move_issue_card_but_unauthorized
@@ -113,7 +112,7 @@ class IssuesPanelControllerTest < ActionController::TestCase
     }
     assert_response :success
     assert_match "alert('#{I18n.t(:notice_not_authorized_to_change_this_issue)}')", response.body
-    assert_match "('#issue-card-1').animate( {left: 0, top: 0}, 500 );", response.body
+    assert_match "$('.issue-card-receiver').sortable('cancel');", response.body
   end
 
   def test_move_issue_card_but_exception_raised
@@ -124,7 +123,7 @@ class IssuesPanelControllerTest < ActionController::TestCase
     }
     assert_response :success
     assert_match "alert('#{error_message_on_move}')", response.body
-    assert_match "('#issue-card-1').animate( {left: 0, top: 0}, 500 );", response.body
+    assert_match "$('.issue-card-receiver').sortable('cancel');", response.body
   end
 
   def assert_modal_issue_card()

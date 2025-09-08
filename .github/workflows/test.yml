@@ -33,6 +33,8 @@ jobs:
       with:
         path: plugins/redmine_issues_panel
 
+    - run: bin/rails redmine:plugins:migrate NAME=redmine_issues_panel RAILS_ENV=test
+
     # # Plugins do not work on the redmine/redmine master branch,
     # so this test combination will be skipped until the issue is fixed.
     - run: bin/rails redmine:plugins:test NAME=redmine_issues_panel
