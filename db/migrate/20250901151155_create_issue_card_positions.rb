@@ -7,5 +7,6 @@ class CreateIssueCardPositions < ActiveRecord::Migration[7.2]
       t.column :updated_on, :datetime, null: false
     end
     add_index :issue_card_positions, :issue_id, name: 'index_issue_card_positions_on_issue_id', unique: true
+    add_index :issue_card_positions, :position, name: 'index_issue_card_positions_on_position'
   end
 end
