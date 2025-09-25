@@ -95,6 +95,8 @@ function loadDroppableSetting() {
   });
 }
 function showIssueDescription(issue_element, description_element) {
+  if (isIssueDescriptionShown()) return;
+
   var issue_id = issue_element.attr('href').split('/').at(-1)
   var mouse_x = issue_element.offset().left;
   var mouse_y = issue_element.offset().top;
@@ -135,6 +137,9 @@ function showIssueDescription(issue_element, description_element) {
       }
     }
   });
+}
+function isIssueDescriptionShown() {
+  return $('#issue_panel_issue_description').is(':visible');
 }
 function hideIssueDescription() {
   $('#issue_panel_issue_description').html('');
