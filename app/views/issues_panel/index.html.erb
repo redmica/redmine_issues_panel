@@ -106,6 +106,7 @@ function showIssueDescription(issue_element, description_element) {
   $.ajax({
     url: '<%= show_issue_description_path %>',
     data: { 'id': issue_id},
+    global: false,
     success: function(data) {
       if (data['description'] !== undefined && data['description'] != '') {
         description_element.html(data['description']);
