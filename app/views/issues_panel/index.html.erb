@@ -99,6 +99,7 @@ function showIssueDescription(issue_element, description_element) {
   var mouse_x = issue_element.offset().left;
   var mouse_y = issue_element.offset().top;
 
+  description_element.hide();
   description_element.css('left', (mouse_x + 'px'));
   description_element.css('top', (mouse_y + 'px'));
   description_element.html('');
@@ -138,8 +139,8 @@ function showIssueDescription(issue_element, description_element) {
   });
 }
 function hideIssueDescription() {
-  $('#issue_panel_issue_description').html('');
   $('#issue_panel_issue_description').hide();
+  $('#issue_panel_issue_description').html('');
 }
 function loadCardFunctions(){
   let closeTimer;
