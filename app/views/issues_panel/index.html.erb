@@ -106,6 +106,7 @@ function showIssueDescription(issue_element, description_element) {
   $.ajax({
     url: '<%= show_issue_description_path %>',
     data: { 'id': issue_id},
+    global: false,
     success: function(data) {
       if (data['description'] !== undefined && data['description'] != '') {
         description_element.html(data['description']);
@@ -141,25 +142,37 @@ function hideIssueDescription() {
   $('#issue_panel_issue_description').hide();
 }
 function loadCardFunctions(){
-  var timer;
+  let closeTimer;
+  let showTimer;
+
   $('.issue-card .card-content .subject a').mouseover(function(event) {
-    clearTimeout(timer);
-    showIssueDescription($(this), $('#issue_panel_issue_description'));
+    const element = $(this);
+    clearTimeout(closeTimer);
+
+    showTimer = setTimeout(function() {
+      showIssueDescription(element, $('#issue_panel_issue_description'));
+    }, 500);
   });
+
   $('.issue-card .card-content .subject a').mouseout(function() {
-    timer = setTimeout(function() {
+    clearTimeout(showTimer);
+
+    closeTimer = setTimeout(function() {
       if (!$('#issue_panel_issue_description').is(':hover')) {
         hideIssueDescription();
       }
     }, 400);
   });
+
   $('#issue_panel_issue_description').mouseleave(function() {
     hideIssueDescription();
   });
+
   $('.link-issue').dblclick(function() {
     var issue_id = $(this).attr('data-issue-id');
     window.location.href='<%= issues_path %>/' + issue_id;
   });
+
   $('.add-issue-card').click(function(e) {
     e.preventDefault();
     $.ajax({
