@@ -3,6 +3,8 @@ name: Test
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "0 23 * * 0-4"   # 08:00 JST, Monday to Friday
 
 jobs:
   test:
