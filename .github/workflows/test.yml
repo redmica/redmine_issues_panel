@@ -2,7 +2,12 @@ name: Test
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'dev*'
   pull_request:
+  schedule:
+    - cron: "0 23 * * 0-4"   # 08:00 JST, Monday to Friday
 
 jobs:
   test:
@@ -12,28 +17,22 @@ jobs:
       matrix:
         include:
           - redmine-repository: 'redmica/redmica'
-            redmine-version: 'stable-3.1'
-            ruby-version: '3.3'
-          - redmine-repository: 'redmica/redmica'
-            redmine-version: 'master'
-            ruby-version: '3.3'
+            redmine-version: 'stable-3.2'
+            ruby-version: '3.4'
           - redmine-repository: 'redmine/redmine'
             redmine-version: 'master'
-            ruby-version: '3.3'
+            ruby-version: '3.4'
 
     steps:
-    - uses: hidakatsuya/action-setup-redmine@v1
+    - uses: hidakatsuya/action-setup-redmine@0147e23d3e5516edf2a0d2cca095570283ca81b4 # v2.0.0
       with:
         repository: ${{ matrix.redmine-repository }}
         version: ${{ matrix.redmine-version }}
         ruby-version: ${{ matrix.ruby-version }}
         database: 'postgres:14'
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         path: plugins/redmine_issues_panel
 
-    # # Plugins do not work on the redmine/redmine master branch,
-    # so this test combination will be skipped until the issue is fixed.
     - run: bin/rails redmine:plugins:test NAME=redmine_issues_panel
-      if: ${{ !(matrix.redmine-repository == 'redmine/redmine' && matrix.redmine-version == 'master') }}
