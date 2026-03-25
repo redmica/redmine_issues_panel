@@ -76,6 +76,8 @@ class IssuesPanelController < ApplicationController
     @issues_panel.query = @query
   end
 
+  # This method is based on IssuesController#retrieve_default_query
+  # and should be kept in sync with the Redmine core implementation.
   def retrieve_default_query(use_session)
     return if params[:query_id].present?
     return if api_request?
