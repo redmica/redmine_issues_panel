@@ -40,15 +40,62 @@ class IssuesPanelControllerTest < ActionController::TestCase
     assert_issues_panel_for_query_100
   end
 
-  def test_index_applies_project_default_query
+  def test_index_should_retrieve_default_query
     @project = Project.find(1)
     @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
-    @project.default_issue_query = IssueQuery.find(100)
     @project.save!
+    query = IssueQuery.find(100)
+    IssueQuery.stubs(:default).with(project: @project).returns(query)
+    get :index, :params => { :project_id => 1 }
+    assert_response :success
 
-    get :index, :params => {
-      :project_id => 1
-    }
+    assert_query_form
+    assert_issues_panel_for_query_100
+  end
+
+  def test_index_should_ignore_default_query_with_without_default
+    @project = Project.find(1)
+    @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
+    @project.save!
+    query = IssueQuery.find(5)
+    IssueQuery.stubs(:default).with(project: @project).returns(query)
+    get :index, :params => { :project_id => 1, :without_default => '1' }
+    assert_response :success
+    assert_select 'h2', :text => I18n.t(:label_issues_panel_plural)
+  end
+
+  def test_index_should_ignore_default_query_with_set_filter_and_without_default
+    @project = Project.find(1)
+    @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
+    @project.save!
+    query = IssueQuery.find(5)
+    IssueQuery.stubs(:default).with(project: @project).returns(query)
+    get :index, :params => { :project_id => 1, :set_filter => '1', :without_default => '1' }
+    assert_response :success
+    assert_select 'h2', :text => I18n.t(:label_issues_panel_plural)
+  end
+
+  def test_index_should_ignore_default_query_with_valid_session_query
+    @project = Project.find(1)
+    @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
+    @project.save!
+    default_query = IssueQuery.find(5)
+    IssueQuery.stubs(:default).with(project: @project).returns(default_query)
+    session_query = IssueQuery.find(1)
+    @request.session[:issue_query] = { :id => session_query.id, :project_id => @project.id }
+    get :index, :params => { :project_id => 1 }
+    assert_response :success
+    assert_select 'h2', :text => session_query.name
+  end
+
+  def test_index_should_use_default_query_with_invalid_session_query
+    @project = Project.find(1)
+    @project.enabled_modules << EnabledModule.new(name: 'issues_panel')
+    @project.save!
+    query = IssueQuery.find(100)
+    IssueQuery.stubs(:default).with(project: @project).returns(query)
+    @request.session[:issue_query] = { :id => 999999, :project_id => @project.id }
+    get :index, :params => { :project_id => 1 }
     assert_response :success
 
     assert_query_form
