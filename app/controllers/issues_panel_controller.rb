@@ -62,7 +62,8 @@ class IssuesPanelController < ApplicationController
 
   def retrieve_issue_panel(params={})
     @issues_panel = Redmine::Helpers::IssuesPanel.new(params)
-    retrieve_query
+    retrieve_default_query(true)
+    retrieve_query(IssueQuery, true)
     # retrieve optional query filter in session
     session_key = IssueQuery.name.underscore.to_sym
     if session[session_key]
@@ -73,5 +74,28 @@ class IssuesPanelController < ApplicationController
       end
     end
     @issues_panel.query = @query
+  end
+
+  # This method is based on IssuesController#retrieve_default_query
+  # and should be kept in sync with the Redmine core implementation.
+  def retrieve_default_query(use_session)
+    return if params[:query_id].present?
+    return if api_request?
+    return if params[:set_filter]
+
+    if params[:without_default].present?
+      params[:set_filter] = 1
+      return
+    end
+
+    if !params[:set_filter] && use_session && session[:issue_query]
+      # Don't apply the default query if a valid query id is set in the session
+      query_id, project_id = session[:issue_query].values_at(:id, :project_id)
+      return if query_id && project_id == @project&.id && IssueQuery.exists?(id: query_id)
+    end
+
+    if (default_query = IssueQuery.default(project: @project))
+      params[:query_id] = default_query.id
+    end
   end
 end
