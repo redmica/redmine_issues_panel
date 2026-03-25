@@ -62,9 +62,8 @@ class IssuesPanelController < ApplicationController
 
   def retrieve_issue_panel(params={})
     @issues_panel = Redmine::Helpers::IssuesPanel.new(params)
-    use_session = true
-    retrieve_default_query(use_session)
-    retrieve_query(IssueQuery, use_session)
+    retrieve_default_query(true)
+    retrieve_query(IssueQuery, true)
     # retrieve optional query filter in session
     session_key = IssueQuery.name.underscore.to_sym
     if session[session_key]
