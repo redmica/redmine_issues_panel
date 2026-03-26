@@ -1,4 +1,5 @@
 class IssueCard < Issue
+  attribute :reordered, :boolean, default: false
   validate do
     (@move_attributes.keys - self.changes_to_save.keys).each do |attr|
       self.errors.add attr, l('activerecord.errors.messages.can_t_be_changed')
@@ -23,9 +24,15 @@ class IssueCard < Issue
         end
       end
     end
-    if @move_attributes.any? || @custom_field_attributes.any?
-      self.safe_attributes = @move_attributes.merge(@custom_field_attributes)
-      self.save!
+    self.transaction do
+      if @move_attributes.any? || @custom_field_attributes.any?
+        self.safe_attributes = @move_attributes.merge(@custom_field_attributes)
+        self.save!
+      end
+      if attributes[:ordered_issue_ids].is_a?(Array) && attributes[:ordered_issue_ids].any?
+        IssueCardPosition.update_positions!(attributes[:ordered_issue_ids])
+        self.reordered = true
+      end
     end
   end
 
