@@ -20,6 +20,12 @@ This is a plugin for Redmine to display issues by statuses and change it's statu
 $ git clone https://github.com/redmica/redmine_issues_panel.git /path/to/redmine/plugins/redmine_issues_panel
 ```
 
+#### Migration (to add the new table)
+
+```
+$ bin/rails redmine:plugins:migrate NAME=redmine_issues_panel
+```
+
 ## How to activate the Issues Panel
 
 #### Check the 'Issues Panel' checkbox on the Project->Settings->Modules and save it.
@@ -34,6 +40,12 @@ $ bundle exec rake redmine:plugins:test NAME=redmine_issues_panel RAILS_ENV=test
 ```
 
 ## Uninstall
+
+#### Run the migration to remove the table.
+
+```
+$ bin/rails redmine:plugins:migrate NAME=redmine_issues_panel VERSION=0
+```
 
 #### Remove the plugin directory.
 
