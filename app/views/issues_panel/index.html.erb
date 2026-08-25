@@ -44,6 +44,7 @@ function loadDraggableSettings() {
     var movable_area = $(id).parent('td').attr('data-movable-area');
     $(id).draggable({
       containment: movable_area,
+      distance: 10,
       snap: ".issue-card-receiver",
       snapMode: "inner",
       revert: function(ui) {
