@@ -1,5 +1,5 @@
 <% @issues_panel.view = self %>
-<% if @issue_card.saved_changes? %>
+<% if @issue_card.saved_changes? || @issue_card.reordered? %>
   /// remove issue card
   $('#issue-card-<%= @issue_card.id %>').remove();
   // refresh status total
@@ -16,11 +16,18 @@
   // restore background-color
   contextMenuAddSelection($('#issue-<%= @issue_card.id %>'));
   loadCardFunctions();
-  loadDraggableSettings();
+  <% unless @issues_panel.query.enable_manual_ordering? %>
+    loadDraggableSettings();
+  <% end %>
 <% else %>
   <% if flash[:error].present? %>
   alert('<%= raw(escape_javascript(flash[:error])) %>');
   <% end %>
-  // revart issue card
-  $('#issue-card-<%= @issue_card.id %>').animate( {left: 0, top: 0}, 500 );
+  <% if @issues_panel.query.enable_manual_ordering? %>
+    // cancel card reordering
+    $('.issue-card-receiver').sortable('cancel');
+  <% else %>
+    // revart issue card
+    $('#issue-card-<%= @issue_card.id %>').animate( {left: 0, top: 0}, 500 );
+  <% end %>
 <% end %>

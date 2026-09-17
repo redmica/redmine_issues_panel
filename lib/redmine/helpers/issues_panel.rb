@@ -24,6 +24,7 @@ module Redmine
       def query=(query)
         @query = query
         query.available_columns.delete_if { |c| c.name == :tracker }
+        query.use_on_issues_panel = true
         @truncated = @query.issue_count.to_i > @issues_limit.to_i
       end
 

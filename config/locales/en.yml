@@ -6,6 +6,8 @@ en:
   notice_failed_to_move_issue: "Failed to move issue."
   label_assign_to_me: "Assign to me"
   field_issues_num_per_row: "Issues num per row"
+  field_issue_card_position: "Issue card position"
+  field_enable_manual_ordering: "Enable manual ordering"
 
   project_module_issues_panel: "Issues Panel"
 
