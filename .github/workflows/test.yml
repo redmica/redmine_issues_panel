@@ -24,7 +24,7 @@ jobs:
             ruby-version: '4.0'
 
     steps:
-    - uses: hidakatsuya/action-setup-redmine@v4.0.0
+    - uses: hidakatsuya/action-setup-redmine@4ad52419ab0854ba6c42f64d31723c848dd1250f # PR #38
       with:
         repository: ${{ matrix.redmine-repository }}
         version: ${{ matrix.redmine-version }}
